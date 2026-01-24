@@ -50,12 +50,31 @@ credentials::set_github_pat()
 
 # 3. SYNC WITH GITHUB ####################################
 
-# Optional: Set the repo URL if origin is not configured
-# repo_url = "https://github.com/janhaviprof-bot/DS-AIforSystemsEng.git"
-# gert::git_remote_add("origin", repo_url)
+# Set the repo URLs for this project
+origin_url = "https://github.com/janhaviprof-bot/DS-AIforSystemsEng.git"
+upstream_url = "https://github.com/timothyfraser/dsai.git"
 
-# Pull the most recent changes from GitHub
-gert::git_pull()
+# Ensure remotes point to the correct repos
+remotes = gert::git_remote_list()
+
+origin = remotes[remotes$name == "origin", , drop = FALSE]
+if (nrow(origin) == 0) {
+  gert::git_remote_add(name = "origin", url = origin_url)
+} else if (!identical(origin$url, origin_url)) {
+  gert::git_remote_remove("origin")
+  gert::git_remote_add(name = "origin", url = origin_url)
+}
+
+upstream = remotes[remotes$name == "upstream", , drop = FALSE]
+if (nrow(upstream) == 0) {
+  gert::git_remote_add(name = "upstream", url = upstream_url)
+} else if (!identical(upstream$url, upstream_url)) {
+  gert::git_remote_remove("upstream")
+  gert::git_remote_add(name = "upstream", url = upstream_url)
+}
+
+# Pull the most recent changes from the professor's repo
+gert::git_pull(remote = "upstream")
 
 # Stage all files in the repository
 gert::git_add(dir(all.files = TRUE))
@@ -64,4 +83,4 @@ gert::git_add(dir(all.files = TRUE))
 gert::git_commit_all("my first commit")
 
 # Push the commit to GitHub
-gert::git_push()
+gert::git_push(remote = "origin")
