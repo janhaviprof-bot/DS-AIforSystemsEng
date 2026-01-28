@@ -9,7 +9,7 @@
 ## ✅ Your Task
 
 This is a hybrid class, meaning all classes are **recorded**! Please kindly fill out this Qualtrics form for our program, giving your consent for this.
-
+ 
 You may either:
 
 - (A) **Access the Embedded Form below** or
