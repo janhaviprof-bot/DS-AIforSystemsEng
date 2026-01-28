@@ -48,9 +48,9 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           
-          # Write the key file - GitHub secrets preserve newlines, so echo should work
-          # But we need to ensure the variable expansion preserves newlines
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          # Write the key file - Use printf to reliably preserve newlines
+          # printf '%s\n' ensures the key is written exactly as stored in the secret
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           
           # Validate the key file was created correctly

@@ -267,3 +267,222 @@ If you encounter issues:
 2. Review the troubleshooting section above
 3. Consult the canvastest documentation
 4. Verify all secrets are configured correctly
+
+---
+
+# GitHub Pages Site Generator Workflow
+
+This GitHub Actions workflow automatically generates and deploys a comprehensive static website from your repository's markdown files, HTML files, and code files to GitHub Pages.
+
+## Overview
+
+The GitHub Pages Site Generator workflow:
+
+- **Converts** all `.md` files to HTML with proper styling and syntax highlighting
+- **Preserves** existing `.html` files
+- **Displays** code files (`.R`, `.py`, `.sh`) with syntax highlighting and download links
+- **Generates** automatic navigation based on directory structure
+- **Deploys** automatically to GitHub Pages on every push to `main`
+
+## How It Works
+
+1. **Triggers**: Runs automatically on push to `main` branch or can be manually triggered
+2. **Build**: 
+   - Sets up Python environment
+   - Installs dependencies (`markdown`, `pygments`)
+   - Runs the site generator script (`.github/scripts/generate_site.py`)
+   - Generates static site in `_site/` directory
+3. **Deploy**: Uploads and deploys the generated site to GitHub Pages
+
+## Features
+
+### Markdown Processing
+- GitHub Flavored Markdown support
+- Code block syntax highlighting (via Pygments)
+- Table of contents generation
+- Image path handling
+- Link rewriting for site navigation
+- Emoji support
+
+### Code File Features
+- Syntax highlighting for R, Python, Bash, and other languages
+- Line numbers
+- Download button (links to raw GitHub file)
+- Copy-to-clipboard functionality
+- File metadata (size, lines, language)
+
+### Navigation Features
+- Hierarchical navigation tree based on directory structure
+- Collapsible sidebar navigation
+- Mobile-responsive design
+- Breadcrumbs support
+
+### Styling
+- Modern, clean design using Tailwind CSS (via CDN)
+- Responsive layout (mobile-friendly)
+- Accessible semantic HTML
+- Print-friendly styles
+
+## Setup
+
+### 1. Enable GitHub Pages
+
+1. Go to your repository on GitHub
+2. Click **Settings** → **Pages**
+3. Under **Source**, select:
+   - **Deploy from a branch**: `gh-pages`
+   - **Branch**: `gh-pages` / `/ (root)`
+4. Click **Save**
+
+**Note**: The workflow automatically creates and updates the `gh-pages` branch, so you don't need to create it manually.
+
+### 2. Workflow Permissions
+
+The workflow requires the following permissions (already configured in `pages.yml`):
+
+- `contents: read` - To checkout the repository
+- `pages: write` - To deploy to GitHub Pages
+- `id-token: write` - For OIDC authentication
+
+These are automatically granted when you enable GitHub Pages.
+
+## File Structure
+
+The site generator creates the following structure:
+
+```
+_site/
+├── index.html (from README.md)
+├── 00_quickstart/
+│   ├── index.html (from README.md)
+│   ├── ACTIVITY_git.html
+│   ├── dependencies.sh.html (code file page)
+│   └── CHEATSHEET_git_bash.html (preserved)
+├── 01_query_api/
+│   └── ...
+├── assets/
+│   ├── css/
+│   │   ├── style.css
+│   │   └── syntax.css
+│   └── js/
+│       └── syntax-highlight.js
+└── _navigation.json (for dynamic nav)
+```
+
+## Manual Site Generation
+
+You can also generate the site locally for testing:
+
+```bash
+# Install dependencies
+pip install markdown pygments
+
+# Run the generator script
+python .github/scripts/generate_site.py
+
+# Preview the site
+cd _site
+python -m http.server 8000
+# Open http://localhost:8000 in your browser
+```
+
+## Configuration
+
+### Ignored Directories
+
+The following directories are automatically excluded from site generation:
+
+- `.git`
+- `.github`
+- `_site`
+- `__pycache__`
+- `node_modules`
+- `.cursor`
+
+### File Type Detection
+
+The generator automatically categorizes files:
+
+- **README**: Files named `README.md`
+- **Activity**: Files starting with `ACTIVITY_`
+- **Lab**: Files starting with `LAB_`
+- **Homework**: Files starting with `HOMEWORK`
+- **Tool**: Files starting with `TOOL`
+- **Code**: Files with extensions `.R`, `.r`, `.py`, `.sh`, `.bash`
+- **HTML**: Files with extensions `.html`, `.htm`
+
+## Workflow Logs
+
+After pushing to `main`, you can view workflow runs:
+
+1. Go to your repository on GitHub
+2. Click **Actions** tab
+3. Select the **Build and Deploy GitHub Pages** workflow
+4. Click on a run to see detailed logs
+
+## Troubleshooting
+
+### Site not updating
+
+- **Check**: Did you push to `main` branch?
+- **Check**: Is the workflow file in `.github/workflows/pages.yml`?
+- **Check**: Are there any errors in the workflow logs?
+- **Check**: Is GitHub Pages enabled in repository settings?
+
+### "No module named 'markdown'"
+
+- **Cause**: Python dependencies not installed
+- **Solution**: The workflow should install dependencies automatically. Check workflow logs for installation errors.
+
+### Navigation not showing correctly
+
+- **Check**: Verify `_navigation.json` is generated in `_site/` directory
+- **Check**: Check browser console for JavaScript errors
+- **Check**: Verify CSS files are copied to `_site/assets/css/`
+
+### Code syntax highlighting not working
+
+- **Check**: Verify `pygments` is installed
+- **Check**: Check browser console for JavaScript errors
+- **Check**: Verify syntax CSS file is loaded (`/assets/css/syntax.css`)
+
+### Images not loading
+
+- **Check**: Verify image paths are relative to repository root
+- **Check**: Check that images are copied to `_site/` directory
+- **Check**: Verify image paths in generated HTML
+
+## Customization
+
+### Styling
+
+Edit `.github/scripts/assets/css/style.css` to customize:
+- Colors and themes
+- Layout and spacing
+- Typography
+- Responsive breakpoints
+
+### Templates
+
+Edit templates in `.github/scripts/templates/`:
+- `base.html` - Base template structure
+- `markdown.html` - Markdown page template
+- `code.html` - Code file page template
+
+### Navigation
+
+The navigation structure is automatically generated from your directory structure. To customize:
+- Edit `.github/scripts/generate_site.py`
+- Modify the `generate_navigation()` function
+- Adjust the `get_file_type()` function for custom file categorization
+
+## Cost
+
+**Free!** Since this is a public repository, GitHub Actions provides unlimited free minutes. The workflow runs automatically on every push to `main` without any cost.
+
+## Related Files
+
+- **Workflow**: `.github/workflows/pages.yml`
+- **Generator Script**: `.github/scripts/generate_site.py`
+- **Templates**: `.github/scripts/templates/`
+- **Assets**: `.github/scripts/assets/`
