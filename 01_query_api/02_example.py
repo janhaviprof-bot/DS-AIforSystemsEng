@@ -12,8 +12,10 @@
 
 ## 0.1 Load Packages ############################
 
-# !pip install requests python-dotenv  # run this once in your environment
+# !pip install requests python-dotenv  # run this once in your environment in gitBash
+# remove the ! if you want to run it.
 
+#Run below in Python.
 import os  # for reading environment variables
 import requests  # for making HTTP requests
 from dotenv import load_dotenv  # for loading variables from .env

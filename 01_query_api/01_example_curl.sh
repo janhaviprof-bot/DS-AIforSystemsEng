@@ -15,25 +15,17 @@
 
 # Load environment variable TEST_API_KEY from .env file
 source .env
-# Print it to the console
+# Print it to the console (done by adding $ sign before the variable name)
 echo "TEST_API_KEY: $TEST_API_KEY"
-
-# ---
-# 1. GET request (simplest version, only works when no headers required)
-#    Fetches user whose id is 2, using specific endpoint /api/users/2
-# This will fail because we are not using an API key!
-curl -X GET "https://reqres.in/api/users/2"
-
-
-
 
 # ---
 # 2. GET request with custom header
 #    Fetches user with id=2, using an API key in the header
 curl -X GET "https://reqres.in/api/users/2" \
      -H "x-api-key: $TEST_API_KEY"
+#Gets text in JSON format---bunch of text.
 
-# 3. GET request with query parameters
+# 3. GET request with query parameters(query ID)
 #    Fetches users on page 1, with id=5 (note: this API ignores id in query string)
 curl -X GET "https://reqres.in/api/users?page=1&id=5" \
      -H "x-api-key: $TEST_API_KEY"
@@ -46,7 +38,7 @@ curl -X POST "https://reqres.in/api/users" \
      -H "Content-Type: application/json" \
      -H "x-api-key: $TEST_API_KEY" \
      -d '{"name": "Ada Lovelace", "job": "engineer"}'
-
+# reqres if fake API so whatever i post wont be saved
 # ---
 # 5. More API Call Method Examples
 #    (Uncomment any line to try it)
