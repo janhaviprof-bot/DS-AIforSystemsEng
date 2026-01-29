@@ -72,14 +72,14 @@
   - **BREAK - 02/14 - 02/17** (February Break)
 
 - [**Module 3: AI API Calls**](../03_query_ai/)
-  - DATES: Monday, 2/16 ~ Sunday, 2/22, 2026
+  - DATES: Monday, 2/9 ~ Sunday, 2/15, 2026
   - TOPICS:
     - Using **Ollama** server
     - Downloading your first **AI** model
     - Serving your first **AI** model 
     - Querying your first **AI** model
     - Making your first **AI** Reporter with **RMarkdown**
-  - ACTIVITIES: **Due: Monday, 2/23, 2026 at 9:00 AM**
+  - ACTIVITIES: **Due: Wednesday, 2/18, 2026 at 9:00 AM**
     - [**ACTIVITY: Run Ollama Locally**](../03_query_ai/ACTIVITY_ollama_local.md)
     - [**ACTIVITY: Set Up Ollama API Key**](../03_query_ai/ACTIVITY_ollama_api_key.md)
     - [**ACTIVITY: Set Up OpenAI API Key**](../03_query_ai/ACTIVITY_openai_api_key.md)
@@ -87,6 +87,15 @@
     - [***LAB: Build an AI-Powered Data Reporter***](../03_query_ai/LAB_ai_reporter.md)
   - ASSIGNMENTS:
     - **HOMEWORK 1** (Due: Monday, 2/23, 2026 at 9:00 AM)
+
+- **INTERMISSIONS: Feb Break**
+  - DATES: Monday, 2/16 ~ Sunday, 2/22, 2026
+  - TOPICS:
+    - Designing your Homework
+    - Designing your Team Tool 
+  - ASSIGNMENTS:
+    - **HOMEWORK 1** (Due: Monday, 2/23, 2026 at 9:00 AM)
+
 
 - [**Module 4: Deploying Apps**](../04_deployment/)
   - DATES: Monday, 2/23 ~ Sunday, 3/1, 2026

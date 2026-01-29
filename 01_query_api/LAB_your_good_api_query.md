@@ -6,9 +6,13 @@
 
 ---
 
-## ✅ Your Task
+## 📋 Lab Overview
 
 Create an API query that returns substantial data (more than 1 row) useful for building a reporter application.
+
+---
+
+## ✅ Your Task
 
 ### 🧱 Stage 1: Design Query
 
@@ -32,6 +36,13 @@ Create an API query that returns substantial data (more than 1 row) useful for b
 
 - [ ] Add comments explaining: API name, endpoint, parameters, expected data
 - [ ] Document: number of records, key fields, data structure
+
+---
+
+## 💡 Tips and Resources
+
+- [READ: Finding APIs](https://github.com/timothyfraser/dsai/blob/main/01_query_api/READ_find_apis.md)
+- [ACTIVITY: Find Your API and API Documentation](https://github.com/timothyfraser/dsai/blob/main/01_query_api/ACTIVITY_your_api.md)
 
 ---
 

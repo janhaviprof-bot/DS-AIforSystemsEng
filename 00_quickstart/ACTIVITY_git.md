@@ -27,7 +27,7 @@ Install Git and Git Bash on your computer. Git Bash provides a Unix-like command
   - macOS: `brew install curl`
   - Linux: `sudo apt install curl`
 - [ ] For more information, see the 🔗 [curl download page](https://curl.se/download.html)
-- **New to cURL? 
+
 
 ### 🧱 Stage 3: Test Your Installation
 
