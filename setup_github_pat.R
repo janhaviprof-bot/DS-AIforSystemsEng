@@ -76,11 +76,14 @@ if (nrow(upstream) == 0) {
 # Pull the most recent changes from the professor's repo
 gert::git_pull(remote = "upstream")
 
-# Stage all files in the repository
-gert::git_add(dir(all.files = TRUE))
-
-# Commit staged changes
-gert::git_commit_all("my first commit")
+# Stage and commit only if there are local changes
+status = gert::git_status()
+if (nrow(status) > 0) {
+  gert::git_add(dir(all.files = TRUE))
+  gert::git_commit_all("my first commit")
+} else {
+  message("No local file changes to commit.")
+}
 
 # Push the commit to GitHub
 gert::git_push(remote = "origin")
