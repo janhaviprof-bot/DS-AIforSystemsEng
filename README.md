@@ -19,6 +19,16 @@
 
 ---
 
+## 🔐 GitHub PAT Setup
+
+Use a **Personal Access Token (PAT)** to authenticate with GitHub when pulling or pushing.
+
+1. Create a `.env` file in the repo root with **one line**: `GITHUB_PAT=your_token_here`
+2. Run the script [`setup_github_pat.R`](setup_github_pat.R) in R
+3. Follow the prompt to enter your PAT
+
+---
+
 ### 🎯 ABOUT THIS COURSE
 
 Modern engineering systems increasingly rely on cloud-based, AI-driven data processing, automation, and analytics. This course equips Systems Engineering students with the coding skills needed to interact with cloud-hosted data, automate workflows, and build scalable AI-powered apps and analytics. Students will gain hands-on experience in querying web APIs, building APIs, and leveraging AI models for automation. Topics include API calls, querying Generative AI, and automation, all to serve automated data reporting. Participants will learn to examine and critique uses of AI in modern systems, considering risk, value, tradeoffs, and policy issues for the customer and society. By the end of the course, students will have built cloud-hosted, AI-powered applications and reporting systems that can dynamically retrieve, process, and visualize data using generative AI. Students are expected to spend 3-4 hours per week per credit hour. Intended for graduate students performing technical tasks interested in software development or data analytics.
