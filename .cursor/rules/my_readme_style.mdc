@@ -1,0 +1,113 @@
+---
+description: README formatting style — bold/underlined headers, TOC, hyperlinks, italics for comments, Mermaid titles
+globs: ["**/README*.md", "**/*README*.md"]
+alwaysApply: false
+---
+# My README Formatting Style
+
+Apply this rule when creating or editing README (and README-style) markdown files so they follow a consistent formatting style.
+
+---
+
+## Headers
+
+- **All section headers must be bold and underlined.**
+- Use HTML underline inside bold so headers render as both bold and underlined.
+
+**Correct:**
+```markdown
+## **<u>Installation</u>**
+### **<u>Quick Start</u>**
+```
+
+**Avoid:** Plain headers with no bold/underline (e.g. `## Installation`).
+
+---
+
+## Hyperlinks to Referenced Files
+
+- **Every reference to a file (script, config, doc, image) must be a hyperlink.**
+- Use relative paths from the README’s location.
+
+**Correct:**
+```markdown
+See [my_script.py](my_script.py) for the main logic.
+Configuration is in [config.yaml](config/config.yaml).
+```
+
+**Avoid:** Bare file names like `my_script.py` or `config.yaml` without a link.
+
+---
+
+## Comments and Additional Descriptions
+
+- **Explanatory comments and extra descriptions must be in italics.**
+
+**Correct:**
+```markdown
+Run the script from the project root. *This ensures relative paths resolve correctly.*
+*Optional: you can override the port with an environment variable.*
+```
+
+**Avoid:** Long explanatory sentences in plain text when they act as comments or asides.
+
+---
+
+## Mermaid Diagrams
+
+- **Every Mermaid diagram must have a title.**
+- Put the title at the top of the diagram block using Mermaid’s title syntax.
+
+**Correct:**
+````markdown
+```mermaid
+---
+title: System architecture overview
+---
+flowchart LR
+  A[Client] --> B[API]
+  B --> C[Database]
+```
+````
+
+**Avoid:** Mermaid blocks without a `---` and `title: ...` section.
+
+---
+
+## Table of Contents
+
+- **Every README must include a Table of Contents (TOC) near the top.**
+- **TOC entries must be hyperlinks to the corresponding section headings** (anchor links).
+
+**Correct:**
+```markdown
+# **<u>Project Name</u>**
+
+## **<u>Table of Contents</u>**
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [API Reference](#api-reference)
+
+## **<u>Installation</u>**
+...
+## **<u>Quick Start</u>**
+...
+```
+
+- Use anchor links that match the heading text: lowercase, spaces as hyphens, no special characters (e.g. `## **<u>Quick Start</u>**` → `#quick-start`).
+- List all major sections (and subsections if you want them in the TOC) with links.
+
+**Avoid:** READMEs without a TOC, or a TOC that lists section names without anchor links.
+
+---
+
+## Checklist for README Formatting
+
+When creating or editing a README, ensure:
+
+- [ ] All headers are **bold** and **<u>underlined</u>**
+- [ ] Every referenced file is linked (relative path)
+- [ ] Comments and extra descriptions are in *italics*
+- [ ] Every Mermaid diagram has a `title` (using `---` and `title: ...`)
+- [ ] A Table of Contents is present with anchor links to each section

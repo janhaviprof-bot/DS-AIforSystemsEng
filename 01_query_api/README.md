@@ -9,6 +9,7 @@
 ## Table of Contents
 
 - [Activities](#activities)
+- [My Scripts Documentation](#my-scripts-documentation)
 - [Example Scripts](#example-scripts)
 - [Reading Materials](#reading-materials)
 
@@ -27,6 +28,12 @@ Complete these activities in order:
 3. [ACTIVITY: Find Your API and Documentation](ACTIVITY_your_api.md)
 4. [ACTIVITY: Make Your First API Query](ACTIVITY_your_api_query.md)
 5. [LAB: Develop a Meaningful API Query](LAB_your_good_api_query.md)
+
+---
+
+## My Scripts Documentation
+
+- [README: My API Query Scripts](README_my_scripts.md) — Overview, API endpoints/parameters, data structure, Mermaid flow diagrams, and usage for [`my_api_query.py`](my_api_query.py) and [`my_good_query.py`](my_good_query.py).
 
 ---
 
