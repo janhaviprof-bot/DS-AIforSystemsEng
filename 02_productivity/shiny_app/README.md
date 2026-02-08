@@ -6,33 +6,71 @@ A Shiny for Python dashboard that queries the **UK Carbon Intensity API** to sho
 
 ## **<u>Table of Contents</u>**
 
-- [Overview](#overview)
-- [Installation](#installation)
-- [How to Run the App](#how-to-run-the-app)
-- [API Requirements](#api-requirements)
-- [Screenshots](#screenshots)
-- [Usage Instructions](#usage-instructions)
+- [For users](#for-users)
+  - [How to open the app](#how-to-open-the-app)
+  - [How to use the app](#how-to-use-the-app)
+- [For developers](#for-developers)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [How to run the app](#how-to-run-the-app)
+  - [API requirements](#api-requirements)
+  - [Screenshots](#screenshots)
 
 ---
 
-## **<u>Overview</u>**
+## **<u>For users</u>**
 
-The app lets you:
+### **<u>How to open the app</u>**
 
-- **Pick a date range** (start and end date). *Times are interpreted as 00:00 UTC for start and 23:00 UTC for end.*
-- **Run a query** to fetch carbon intensity and generation mix from the [UK Carbon Intensity API](https://api.carbonintensity.org.uk/).
-- **View a merged table** of carbon intensity (forecast, actual, index) and generation mix by fuel (e.g. gas, wind, nuclear) as percentages.
-- **See a visual summary**: an **average generation mix** pie chart and an **actual vs forecast** line plot over the selected period.
+If the app is already running (e.g. someone started it for you), open your browser and go to:
 
-The UI is built with [app.py](app.py), [ui_components.py](ui_components.py), and [server.py](server.py); API calls and parsing are in [utils.py](utils.py).
+**<http://127.0.0.1:8000/>**
+
+*The app runs on your machine; no account or API key is needed.*
 
 ---
 
-## **<u>Installation</u>**
+### **<u>How to use the app</u>**
+
+1. **Set the date range** in the "Query parameters" card: click each date field and choose a start and end date. *Start is 00:00 UTC, end is 23:00 UTC.*
+
+2. **Click "Run query"** to fetch carbon intensity and generation mix for that range from the UK Carbon Intensity API.
+
+3. **Review the table** under "Carbon intensity and mix by source": each row is a time period with:
+   - **forecast** and **actual** carbon intensity (gCO₂/kWh),
+   - **index** (e.g. low/moderate/high),
+   - **Generation mix** columns: percentage by fuel (e.g. gas, wind, nuclear, solar).
+
+4. **Check the visual summary** at the bottom:
+   - **Pie chart:** average generation mix across all periods in your query (green/teal theme).
+   - **Line plot:** actual vs forecast carbon intensity over time; use the legend to tell the lines apart.
+
+5. **Change the date range** and click "Run query" again to explore different periods.
+
+*If the API is unavailable or the request fails, an error message appears in the results area.*
+
+---
+
+## **<u>For developers</u>**
+
+### **<u>Overview</u>**
+
+The app lets users pick a date range, call the [UK Carbon Intensity API](https://api.carbonintensity.org.uk/), and view a merged table of intensity + generation mix plus two charts. *Times are 00:00 UTC for start and 23:00 UTC for end.*
+
+**Structure:**
+
+- [app.py](app.py) — Entry point; wires UI and server, runs the app.
+- [ui_components.py](ui_components.py) — UI layout (header, query card, results cards, outputs).
+- [server.py](server.py) — Server logic: reactive query on button click, [render.DataGrid](https://shiny.rstudio.com/py/docs/render.mdc#render.DataGrid) for table, [render.plot](https://shiny.rstudio.com/py/docs/render.mdc#render.plot) for pie and line chart.
+- [utils.py](utils.py) — API helpers: [fetch_intensity](utils.py), [fetch_generation](utils.py); parses JSON into pandas DataFrames.
+
+---
+
+### **<u>Installation</u>**
 
 1. **Python:** Use Python 3.10+ with `pip` available.
 
-2. **Clone or navigate** to the app directory:
+2. **Navigate** to the app directory:
    ```bash
    cd path/to/dsai/02_productivity/shiny_app
    ```
@@ -52,7 +90,7 @@ The UI is built with [app.py](app.py), [ui_components.py](ui_components.py), and
 
 ---
 
-## **<u>How to Run the App</u>**
+### **<u>How to run the app</u>**
 
 From the `shiny_app` folder (with the virtual environment activated if you use one):
 
@@ -66,40 +104,25 @@ python app.py
 shiny run app.py
 ```
 
-The app starts a local server and may open in your default browser automatically. **To open the app as a user**, go to: **<http://127.0.0.1:8000/>** in your browser. *If using Cursor’s Simple Browser, prefer an external browser and visit the URL above.*
+The app starts a local server and may open in your default browser. To open as a user, go to **<http://127.0.0.1:8000/>**. *If using Cursor’s Simple Browser, use an external browser and visit that URL.*
 
 ---
 
-## **<u>API Requirements</u>**
+### **<u>API requirements</u>**
 
 - **No API key is required.** The [UK Carbon Intensity API](https://api.carbonintensity.org.uk/) is public and does not use authentication.
-- **Network access** is required so the app can call:
+- **Network access** is required for:
   - `https://api.carbonintensity.org.uk/intensity/{from}/{to}`
   - `https://api.carbonintensity.org.uk/generation/{from}/{to}`
-- **No account or sign-up** is needed. *Just run the app and use a valid date range.*
+- *No account or sign-up needed.*
 
 ---
 
-## **<u>Screenshots</u>**
+### **<u>Screenshots</u>**
 
-*Add your own screenshots to the [screenshots](screenshots) folder (e.g. `overview.png`, `charts.png`) and link them here for a quick visual of the app.*
+*Add your own screenshots to the [screenshots](screenshots) folder (e.g. `overview.png`, `charts.png`) and link them here.*
 
 | View | Description |
 |------|-------------|
 | [screenshots/overview.png](screenshots/overview.png) | *Header, query card, and results table* |
 | [screenshots/charts.png](screenshots/charts.png) | *Generation mix pie chart and actual vs forecast line plot* |
-
----
-
-## **<u>Usage Instructions</u>**
-
-1. **Open the app** (see [How to Run the App](#how-to-run-the-app)).
-2. **Set the date range** in the "Query parameters" card: click each date field and choose start and end dates. *Start is 00:00 UTC, end is 23:00 UTC.*
-3. **Click "Run query"** to fetch intensity and generation mix for that range.
-4. **Review the table** under "Carbon intensity and mix by source": each row is a time period with forecast/actual intensity and generation mix percentages by fuel.
-5. **Check the visual summary** at the bottom:
-   - **Pie chart:** average generation mix across all periods (green/teal Carbon theme).
-   - **Line plot:** actual and forecast carbon intensity over time, with a legend.
-6. **Change the date range** and click "Run query" again to explore different periods.
-
-*If the API is unavailable or the request fails, an error message appears in the results area.*
