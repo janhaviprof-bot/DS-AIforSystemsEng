@@ -12,10 +12,10 @@
 ## 0.1 Load Packages #################################
 
 # If you haven't already, install required packages:
-# pip install markdown python-docx
-
+#   pip install markdown python-docx
+# (Use "python-docx", not "docx" — the latter is a different, broken package.)
 import markdown  # for converting markdown to HTML
-from docx import Document  # for creating Word documents
+from docx import Document  # for creating Word documents (from python-docx)
 
 ## 0.2 Mock LLM Output #########################
 
@@ -43,19 +43,19 @@ report_text = mock_llm_response["response"]
 
 # Write directly to a text file
 # Simple and universal format
-with open("report.txt", "w", encoding="utf-8") as f:
+with open("03_query_ai/05_reporting_report.txt", "w", encoding="utf-8") as f:
     f.write(report_text)
 
-print("✅ Saved report.txt")
+print("✅ Saved 03_query_ai/05_reporting_report.txt")
 
 # 2. SAVE AS MARKDOWN (.md) ###################################
 
 # Markdown files are great for GitHub and documentation
 # The content is already in markdown format, so we just write it
-with open("report.md", "w", encoding="utf-8") as f:
+with open("03_query_ai/05_reporting_report.md", "w", encoding="utf-8") as f:
     f.write(report_text)
 
-print("✅ Saved report.md")
+print("✅ Saved 05_reporting_report.md")
 
 # 3. SAVE AS HTML (.html) ###################################
 
@@ -79,11 +79,11 @@ html_document = f"""<!DOCTYPE html>
 </body>
 </html>"""
 
-with open("report.html", "w", encoding="utf-8") as f:
+with open("03_query_ai/05_reporting_report.html", "w", encoding="utf-8") as f:
     f.write(html_document)
 
-print("✅ Saved report.html")
-
+print("✅ Saved 05_reporting_report.html")
+    
 # 4. SAVE AS WORD DOCUMENT (.docx) ###################################
 
 # Create a Word document for professional sharing
@@ -105,7 +105,7 @@ for line in report_text.split("\n"):
         # Regular paragraph
         doc.add_paragraph(line)
 
-doc.save("report.docx")
+doc.save("03_query_ai/05_reporting_report.docx")
 
-print("✅ Saved report.docx")
+print("✅ Saved 05_reporting_report.docx")
 print("\n✅ All report formats saved successfully!")

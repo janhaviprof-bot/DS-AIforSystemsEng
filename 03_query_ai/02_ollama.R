@@ -18,7 +18,7 @@ url = paste0("http://localhost:", PORT, "/api/generate")
 
 # Construct the request body as a list
 body <- list(
-  model = "gemma3:latest", # Model name
+  model = "smollm2:1.7b", # Model name
   prompt = "Is model working?",        # User prompt
   stream = FALSE       # Non-streaming response
 )
