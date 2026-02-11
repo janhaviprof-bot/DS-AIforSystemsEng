@@ -17,7 +17,7 @@ Add documentation libraries to **Cursor** so the AI agent can reference them whe
 - [ ] Open **Cursor**.
 - [ ] Go to **Settings** (use `Ctrl+,` on Windows/Linux or `Cmd+,` on Mac, or click the gear icon).
 - [ ] In the settings search bar, type `docs`.
-- [ ] Select **Features** → **Docs** from the results.
+- [ ] Select **Indexing & Docs** → **Docs** from the results.
 
 You should see the **Docs** configuration panel where you can manage documentation sources.
 
@@ -121,7 +121,7 @@ print(response.json())
 ## 📤 To Submit
 
 - For credit: Submit screenshots showing:
-  1. Your **Cursor Settings** → **Features** → **Docs** panel with both `httr2` and `requests` documentation added.
+  1. Your **Cursor Settings** → **Indexing & Docs** → **Docs** panel with both `httr2` and `requests` documentation added.
   2. A chat conversation where you used `@Docs httr2` or `@Docs requests` to get help with code.
   3. The resulting code file (either `test_httr2.R` or `test_requests.py`) that was generated with documentation assistance.
 

@@ -32,7 +32,7 @@ url = f"{OLLAMA_HOST}/api/generate"
 # Build the request body as a dictionary
 # This tells Ollama which model to use and what prompt to send
 body = {
-    "model": "gemma3:latest",  # Model name
+    "model": "smollm2:1.7b",  # Model name
     "prompt": "Is model working?",  # User prompt
     "stream": False  # Non-streaming response
 }

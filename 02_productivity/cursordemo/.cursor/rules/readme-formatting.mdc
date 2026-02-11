@@ -1,0 +1,88 @@
+---
+description: Style and formatting requirements for README.md files
+globs: **/README.md
+alwaysApply: false
+---
+
+# README Formatting Standards
+
+When creating or updating README.md files, follow these style and formatting requirements:
+
+## Structure Requirements
+
+- **Maximum length**: 1000 words
+- **Table of Contents**: Always include a clickable TOC with anchor links to all major sections
+- **Section headers**: Use clear, hierarchical headers (## for main sections, ### for subsections)
+- **Bullet points**: Use bullet points frequently for lists, features, and key information
+- **Code chunks**: Include brief, helpful code examples where relevant (keep concise)
+- **Mermaid diagrams**: Include 1-2 mermaid diagrams to illustrate architecture, data flow, or workflows
+- **Hyperlinks**: Link to relevant files, documentation, and external resources using markdown links
+
+## Formatting Style
+
+- **Clean formatting**: Use consistent spacing, proper markdown syntax
+- **Developer-focused**: Write for developers, assume technical knowledge
+- **Scannable**: Use bullet points, short paragraphs, clear section breaks
+- **Actionable**: Include quick start guides, usage examples, and clear instructions
+
+## Required Sections
+
+At minimum, include:
+- Overview/Introduction
+- Quick Start
+- Architecture/Components (with diagram)
+- Usage Guide
+- Project Structure
+- Links to detailed documentation
+
+## Example Structure
+
+```markdown
+# Project Name
+
+Brief description.
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Usage](#usage)
+- [Documentation](#documentation)
+
+## Quick Start
+
+**Run:**
+```bash
+command here
+```
+
+## Architecture
+
+```mermaid
+graph TB
+    A[Component] --> B[Component]
+```
+
+## Usage
+
+- Feature 1: Description
+- Feature 2: Description
+
+## Documentation
+
+See [`docs/`](docs/) for detailed information.
+```
+
+## Code Examples
+
+- Keep code blocks brief and focused
+- Include file paths in links: `[app.R](app.R)`
+- Use appropriate language tags for syntax highlighting
+- Show both command-line and code examples when relevant
+
+## Diagrams
+
+- Use mermaid for architecture, data flow, or sequence diagrams
+- Keep diagrams simple and focused
+- Maximum 2 diagrams per README
+- Place diagrams in relevant sections (not all at the top)

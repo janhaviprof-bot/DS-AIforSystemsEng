@@ -44,31 +44,31 @@ report_text = mock_llm_response$response
 
 # Use readr::write_lines for simple text file writing
 # Simple and universal format
-write_lines(report_text, "report.txt")
+write_lines(report_text, "03_query_ai/05_reporting_report.txt")
 
-cat("✅ Saved report.txt\n")
+cat("✅ Saved 05_reporting_report.txt\n")
 
 # 2. SAVE AS MARKDOWN (.md) ###################################
 
 # Markdown files are great for GitHub and documentation
 # The content is already in markdown format, so we just write it
-write_lines(report_text, "report.md")
+write_lines(report_text, "03_query_ai/05_reporting_report.md")
 
-cat("✅ Saved report.md\n")
+cat("✅ Saved 05_reporting_report.md\n")
 
 # 3. SAVE AS HTML (.html) ###################################
 
 # Create a temporary R Markdown file
-temp_rmd = "temp_report.Rmd"
+temp_rmd = "03_query_ai/temp_report.Rmd"
 write_lines(c("---", "output: html_document", "---", "", report_text), temp_rmd)
 
 # Render to HTML
-render(temp_rmd, output_file = "report.html", quiet = TRUE)
+render(temp_rmd, output_file = "05_reporting_report.html", quiet = TRUE)
 
 # Clean up temporary file
 file.remove(temp_rmd)
 
-cat("✅ Saved report.html\n")
+cat("✅ Saved 05_reporting_report.html\n")
 
 # 4. SAVE AS WORD DOCUMENT (.docx) ###################################
 
@@ -95,7 +95,7 @@ for (line in lines) {
   }
 }
 
-print(doc, target = "report.docx")
+print(doc, target = "03_query_ai/05_reporting_report.docx")
 
-cat("✅ Saved report.docx\n")
+cat("✅ Saved 05_reporting_report.docx\n")
 cat("\n✅ All report formats saved successfully!\n")

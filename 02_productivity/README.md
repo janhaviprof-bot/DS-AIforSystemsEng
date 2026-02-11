@@ -22,11 +22,8 @@ Complete these activities in order:
 3. [ACTIVITY: Create Custom Cursor Rules for README Formatting](ACTIVITY_cursor_rules.md)
 4. [LAB: Build a Shiny App Using Cursor](LAB_cursor_shiny_app.md)
 
----
-
-## Readings
-
-- None.
+- Optional: [READ: VSCode Extensions for Cursor](READ_extensions.md)
+- Optional: See `cursordemo/` folder for an example of our Cursor demonstration activity on smart vibecoding.
 
 ---
 
