@@ -1,0 +1,74 @@
+Tool name
+
+GreenCharge Planner : an intelligent EV charging planner that analyzes UK grid carbon intensity forecasts to recommend the cleanest and most sustainable charging windows.
+
+ 
+
+Stakeholders needs
+
+EV Owner
+
+Lowest-carbon charging time
+Simple daily schedule
+Easy understanding of carbon intensity data
+Future planning for next-day charging
+EV Sellers
+
+Advertise for more green energy adoption
+ 
+
+System goals (core functions)
+
+INTERPRET: Analyze carbon intensity forecast and actual data from API.
+SUMMARIZE: Identify and rank lowest-carbon (“green”) charging slots.
+FORMAT: Present results as simple daily schedule or recommendations.
+PREDICT : Suggest optimal future charging windows
+ 
+
+Mapping: stakeholder needs → system goals
+
+stakeholder and needs mapping
+Stakeholder Needs ↓ / System Goals →
+
+Goal 1 INTERPRET
+
+Goal 2 SUMMARIZE
+
+Goal 3 FORMAT
+
+Goal 4 PREDICT
+
+Need 1: Lowest-carbon charging time
+
+✔
+
+✔
+
+✔
+
+Need 2: Simple daily schedule
+
+✔
+
+✔
+
+Need 3: Easy understanding of data
+
+✔
+
+✔
+
+Need 4: Future planning
+
+✔
+
+✔
+
+ 
+
+Summary
+
+The GreenCharge Planner uses data from the UK Carbon Intensity API to recommend environmentally friendly charging times for electric vehicles.
+The system interprets forecast and actual carbon intensity data to identify low-emission electricity periods throughout the day. It then summarizes and formats this information into clear green charging slots so EV users can schedule charging when grid emissions are lowest.
+
+This tool supports sustainability-conscious users by making carbon-aware decisions simple and actionable.
