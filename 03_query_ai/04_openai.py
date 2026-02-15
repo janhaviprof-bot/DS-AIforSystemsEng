@@ -32,7 +32,7 @@ url = "https://api.openai.com/v1/responses"
 # Construct the request body
 body = {
     "model": "gpt-4o-mini",  # Low-cost model
-    "input": "Hello! Please respond with: Model is working."
+    "input": "Hello! Please respond with: Model is working Janhavi."
 }
 
 # Set headers with API key

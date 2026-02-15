@@ -35,7 +35,7 @@ body = {
     "messages": [
         {
             "role": "user",
-            "content": "Hello! Please respond with: Model is working."
+            "content": "Hello! Please respond with: Model is working Janhavi."
         }
     ],
     "stream": False  # Non-streaming response
