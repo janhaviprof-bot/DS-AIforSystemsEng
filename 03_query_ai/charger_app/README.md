@@ -7,6 +7,7 @@ A **Shiny (Python)** web app that suggests the best EV charging times using UK c
 ## **<u>Table of Contents</u>**
 
 **For users**
+- [Quick start (usage)](#quick-start-usage)
 - [What it does](#what-it-does)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -20,6 +21,8 @@ A **Shiny (Python)** web app that suggests the best EV charging times using UK c
 - [Project structure](#project-structure)
 - [Server flow](#server-flow)
 - [Backend services](#backend-services)
+- [Technical details](#technical-details)
+- [Data summary (API data)](#data-summary-api-data)
 - [Layout and UI](#layout-and-ui)
 
 ---
@@ -32,6 +35,14 @@ A **Shiny (Python)** web app that suggests the best EV charging times using UK c
 - **Calendar:** Add a recommended slot to your calendar (Google Calendar or download `.ics`) so you can charge in the suggested window.
 
 *All times are shown in UK local time; carbon data is from the National Grid ESO.*
+
+---
+
+## **<u>Quick start (usage)</u>**
+
+1. **Install dependencies:** From the [charger_app](.) directory: `python -m venv .venv`, activate it, then `pip install -r requirements.txt`. *See [Installation](#installation).*
+2. **Set up API keys:** Create a [`.env`](.env) in this folder (or repo root) with `OLLAMA_API_KEY`, `EV_API_KEY`, and `OPENAI_API_KEY`. *See [Configuration](#configuration).*
+3. **Run the software:** `python app.py` (or `shiny run app.py`). The app opens in your browser. *See [Running the app](#running-the-app) and [Using the app](#using-the-app).*
 
 ---
 
@@ -261,6 +272,61 @@ flowchart TB
 - **Carbon Intensity API** (National Grid ESO): 48h forecast; no key required. Used in `fetch_intensity_48h()` in [utils.py](utils.py).
 
 *All network calls and timeouts are in [utils.py](utils.py); [server.py](server.py) only calls the exported functions.*
+
+---
+
+## **<u>Technical details</u>**
+
+**API keys:** Stored in [`.env`](.env) (this directory or repo root). Required: `OLLAMA_API_KEY`, `EV_API_KEY`, `OPENAI_API_KEY`. Carbon Intensity API does not require a key.
+
+**Endpoints:**
+
+| Service | Endpoint | Method |
+|---------|----------|--------|
+| Ollama Cloud | `https://ollama.com/api/chat` | POST |
+| API Ninjas EV | `https://api.api-ninjas.com/v1/electricvehicle` | GET (params: `make`, `model`) |
+| UK Carbon Intensity | `https://api.carbonintensity.org.uk/intensity/{from_ts}/fw48h` | GET |
+| OpenAI | `https://api.openai.com/v1/chat/completions` | POST (Bearer token) |
+
+**Packages:** See [requirements.txt](requirements.txt): `shiny` (≥1.0), `pandas` (≥2.0), `requests` (≥2.28), `python-dotenv` (≥1.0).
+
+**File structure:** [app.py](app.py) (entry), [server.py](server.py) (reactive logic), [ui_components.py](ui_components.py) (UI + CSS), [utils.py](utils.py) (all API/LLM calls). *See [Project structure](#project-structure).*
+
+---
+
+## **<u>Data summary (API data)</u>**
+
+Tables below describe the columns the app uses from each data source.
+
+**API Ninjas – Electric Vehicle API** (EV specs per make/model):
+
+| Column name | Data type | Description |
+|-------------|-----------|-------------|
+| `make` | string | Vehicle manufacturer (e.g. Tesla). |
+| `model` | string | Model name (e.g. Model 3). |
+| `battery_capacity` | string | Nominal battery capacity (e.g. "75 kWh"). |
+| `battery_useable_capacity` | string | Usable battery capacity when different from nominal (e.g. "72 kWh"). |
+| `charge_power` | string | AC charge power (e.g. "11 kW AC"); used with battery to estimate charging time. |
+
+*The API may return additional fields; the app normalizes and uses these. The LLM fallback returns the same shape.*
+
+**Carbon Intensity API (UK)** – 48h forecast (30-minute intervals):
+
+| Column name | Data type | Description |
+|-------------|-----------|-------------|
+| `from` | string | Start of 30-minute period (ISO8601 UTC). |
+| `to` | string | End of 30-minute period (ISO8601 UTC). |
+| `forecast` | number | Forecast carbon intensity (gCO₂/kWh). |
+| `index` | string | Band: `"low"`, `"moderate"`, or `"high"`. |
+
+**Recommended slots** (app output from OpenAI + intensity data):
+
+| Column name | Data type | Description |
+|-------------|-----------|-------------|
+| `start` | string | Slot start time (ISO8601 UTC). |
+| `end` | string | Slot end time (ISO8601 UTC). |
+| `reason` | string | Short explanation for the recommendation. |
+| `intensity_index` | string | Derived: `"low"`, `"moderate"`, or `"high"` for that slot. |
 
 ---
 

@@ -13,13 +13,13 @@ export OLLAMA_HOST="0.0.0.0:$PORT"
 MODEL="smollm2:1.7b"  # Small, reputable model (3.3GB)
 SERVER_PID=""
 MODEL_PID=""
-
+#This step gives permission to ollama to make changes.
 # Start server in background, and assign the process ID to the SERVER_PID variable
 ollama serve > /dev/null 2>&1 & SERVER_PID=$!
 # View the process ID of ollama
 echo $SERVER_PID
 
-# Pull model of interest
+# Pull model of interest -need to do it once only hence commented out
 # ollama pull $MODEL
 
 # run model of interest interactively -- usually I don't want this
