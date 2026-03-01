@@ -6,7 +6,7 @@
     "entrypoint": "app"
   },
   "python": {
-    "version": "3.14.2",
+    "version": "3.12",
     "package_manager": {
       "name": "pip",
       "version": "25.3",
