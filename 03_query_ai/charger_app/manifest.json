@@ -3,7 +3,8 @@
   "locale": "English_United States.1252",
   "metadata": {
     "appmode": "python-shiny",
-    "entrypoint": "app"
+    "entrypoint": "app",
+    "title": "Green Charge Finder"
   },
   "python": {
     "version": "3.12",
