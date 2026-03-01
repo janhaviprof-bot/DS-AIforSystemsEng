@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "locale": "English_United States.1252",
+  "metadata": {
+    "appmode": "python-shiny",
+    "entrypoint": "app"
+  },
+  "python": {
+    "version": "3.14.2",
+    "package_manager": {
+      "name": "pip",
+      "version": "25.3",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    "requirements.txt": {
+      "checksum": "96de4525c8582d58ae47989fb353a2d7"
+    },
+    ".dockerignore": {
+      "checksum": "d8e6603c9155163241f2712171e42de4"
+    },
+    "Dockerfile": {
+      "checksum": "3ea1c2ba9be4c73c7e78c0c368529c48"
+    },
+    "LAYOUT_DIAGRAM.md": {
+      "checksum": "95b30750bf161a2be546e164239b25fc"
+    },
+    "ProjectDesign.txt": {
+      "checksum": "b71c0039aca85a8c70abf6c2d583e717"
+    },
+    "ProjectProcess.md": {
+      "checksum": "1f4ba9ccf5e858f7d58d20207ed4bc3a"
+    },
+    "README.md": {
+      "checksum": "efeaff113bce4c9fbc4b0bd4dd1a3e92"
+    },
+    "UI_REDESIGN.md": {
+      "checksum": "dd9d7fad148c53c689f63f1e4e4a247f"
+    },
+    "app.py": {
+      "checksum": "8d9874f714fe41f828c953d068d30310"
+    },
+    "manifestme.sh": {
+      "checksum": "8c5d0f77a85520133d218f8290abf7d3"
+    },
+    "server.py": {
+      "checksum": "2747852adf891559fb2628a57f11f1c2"
+    },
+    "ui_components.py": {
+      "checksum": "0ec0c82c67cbd61f5d6431c1a38e004b"
+    },
+    "utils.py": {
+      "checksum": "e0d3c0da073cab6cc6496f48dfdfe765"
+    }
+  }
+}
