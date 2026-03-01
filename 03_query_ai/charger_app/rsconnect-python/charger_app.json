@@ -1,0 +1,12 @@
+{
+    "https://connect.systems-apps.com": {
+        "server_url": "https://connect.systems-apps.com",
+        "filename": "C:\\Work\\Study\\SYSEN-5381\\Repository\\dsai\\03_query_ai\\charger_app",
+        "app_url": "https://connect.systems-apps.com/content/db8e5d0b-1aaf-4392-883f-937b17db04ea/",
+        "app_id": "62",
+        "app_guid": "db8e5d0b-1aaf-4392-883f-937b17db04ea",
+        "title": "charger_app",
+        "app_mode": "python-shiny",
+        "app_store_version": 1
+    }
+}
