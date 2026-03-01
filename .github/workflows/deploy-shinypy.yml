@@ -20,11 +20,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Publish to Posit Connect
-        uses: rstudio/actions/connect-publish@main
-        with:
-          url: ${{ secrets.CONNECT_SERVER }}
-          api-key: ${{ secrets.CONNECT_API_KEY }}
-          access-type: acl
-          dir: 03_query_ai/charger_app
-          force: false
+      - name: Install rsconnect
+        run: pip install rsconnect-python
+
+      - name: Deploy to Posit Connect
+        run: |
+          rsconnect deploy shiny 03_query_ai/charger_app \
+            --server ${{ secrets.CONNECT_SERVER }} \
+            --api-key ${{ secrets.CONNECT_API_KEY }}
