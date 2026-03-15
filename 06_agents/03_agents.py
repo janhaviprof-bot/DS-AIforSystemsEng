@@ -57,6 +57,7 @@ stat = (data
         .query("availability == 'Unavailable'"))
 
 # Convert the data to a text string
+#You dont need to convert in markdown to save token you can save it seperated by comma.
 task2 = df_as_text(stat)
 
 # Task 2 - Analyst Agent -------------------------
