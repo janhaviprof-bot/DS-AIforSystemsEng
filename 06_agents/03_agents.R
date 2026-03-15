@@ -70,6 +70,13 @@ stat = data %>%
   filter(update_date == max(update_date)) %>%
   filter(availability == "Unavailable") %>%
   ungroup()
+
+# NOTE: The API data in 'data' changes over time,
+# so sometimes if you filter to availability == "Unavailable",
+# there literally may be no rows with that trait.
+# If that's the case, the 'stat' table will be empty.
+# Just remove the line `filter(availability == "Unavailable")` if that's the case.
+
 # Convert the data to a text string
 task2 = df_as_text(stat)
 

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "locale": "English_United States.1252",
+  "metadata": {
+    "appmode": "python-shiny",
+    "entrypoint": "shiny.express.app:app_2e_py"
+  },
+  "python": {
+    "version": "3.12.10",
+    "package_manager": {
+      "name": "pip",
+      "version": "25.3",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    "requirements.txt": {
+      "checksum": "7541cc32fadd5026b397956216f75194"
+    },
+    "README.md": {
+      "checksum": "799c2b24ab59988a536462568e4a2093"
+    },
+    "app.py": {
+      "checksum": "a3b74af8faf56b8f21f403f1fb19e392"
+    },
+    "manifestme.sh": {
+      "checksum": "e70ba862670dc73d235fc5151681f3f3"
+    },
+    "testme.sh": {
+      "checksum": "356f8cfadeec17caa27aefb8189ed7a5"
+    }
+  }
+}

@@ -43,7 +43,7 @@ In this task, you will deploy a live app with **DigitalOcean's App Platform**!
 - [ ] Select **Autodeploy** to deploy this code every time.
 - [ ] Select **Next**.
 
-![Digital Ocean Create App Platform](../../docs/images/digitalocean_select_repo_next.PNG)
+![Digital Ocean Create App Platform](../../docs/images/digitalocean_select_repo_next.png)
 
 ### ✅ Review and configure settings
 

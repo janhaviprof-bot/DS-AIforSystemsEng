@@ -24,6 +24,12 @@ Build a simple multi-agent workflow where agents work together in sequence. Unde
 - [ ] Design Agent 2: Takes the summary and produces formatted output
 - [ ] Run your workflow and verify agents pass information correctly
 
+### 🧱 Stage 3: Explore Extended Multi-Agent Examples
+
+- [ ] Review the vision-language model examples: [`05_vlms_local.R`](05_vlms_local.R), [`05_vlms_local.py`](05_vlms_local.py), [`05_vlms_cloud.R`](05_vlms_cloud.R), and [`05_vlms_cloud.py`](05_vlms_cloud.py)
+- [ ] Review the audio-language model examples: [`06_alms_cloud.R`](06_alms_cloud.R) and [`06_alms_cloud.py`](06_alms_cloud.py)
+- [ ] Review parallel query examples and dataset: [`07_parallel_queries.R`](07_parallel_queries.R), [`07_parallel_queries.py`](07_parallel_queries.py), and [`07_feedback.csv`](07_feedback.csv)
+
 ---
 
 ## 📤 To Submit

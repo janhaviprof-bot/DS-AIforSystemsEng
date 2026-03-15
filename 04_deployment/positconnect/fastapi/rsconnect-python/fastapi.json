@@ -1,0 +1,12 @@
+{
+    "https://connect.systems-apps.com": {
+        "server_url": "https://connect.systems-apps.com",
+        "filename": "C:\\Users\\tmf77\\courses\\SYSEN5381\\dsai\\04_deployment\\positconnect\\fastapi",
+        "app_url": "https://connect.systems-apps.com/content/39634566-78b0-4f98-a7cd-956a18a7e0fd/",
+        "app_id": "28",
+        "app_guid": "39634566-78b0-4f98-a7cd-956a18a7e0fd",
+        "title": "fastapi",
+        "app_mode": "python-fastapi",
+        "app_store_version": 1
+    }
+}

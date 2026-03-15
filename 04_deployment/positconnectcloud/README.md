@@ -1,8 +1,8 @@
 ![Banner Image](../../docs/images/icons.png)
 
-# README `/positcloudconnect`
+# README `/positconnectcloud`
 
-> Deploy your applications to Posit Cloud Connect.
+> Deploy your applications to Posit Connect Cloud.
 
 ---
 
@@ -16,13 +16,13 @@
 
 Complete these activities in order:
 
-1. [ACTIVITY: Deploy to Posit Cloud Connect](ACTIVITY_posit_cloud_connect.md)
+1. [ACTIVITY: Deploy to Posit Connect Cloud](ACTIVITY_posit_cloud_connect.md)
 
 ---
 
 ## Readings
 
-- None.
+- See Example Apps in `shinypy` and `shinyr` folders!
 
 ---
 

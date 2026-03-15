@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - '03_query_ai/charger_app/**'
+      - '04_deployment/positconnect/shinypy/**'
       - '.github/workflows/deploy-shinypy.yml'
   workflow_dispatch:
 
@@ -20,11 +20,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install rsconnect
-        run: pip install rsconnect-python
-
-      - name: Deploy to Posit Connect
-        run: |
-          rsconnect deploy shiny 03_query_ai/charger_app \
-            --server ${{ secrets.CONNECT_SERVER }} \
-            --api-key ${{ secrets.CONNECT_API_KEY }}
+      - name: Publish to Posit Connect
+        uses: rstudio/actions/connect-publish@main
+        with:
+          url: ${{ secrets.CONNECT_SERVER }}
+          api-key: ${{ secrets.CONNECT_API_KEY }}
+          access-type: acl
+          dir: 04_deployment/positconnect/shinypy
+          force: false
