@@ -189,6 +189,11 @@ def get_shortages(category="Psychiatry", limit=500):
     
     # Perform the request
     response = requests.get(url, params=params, headers={"Accept": "application/json"})
+    # FDA API returns 404 when a search has no results; treat as empty data and continue
+    if response.status_code == 404:
+        return pd.DataFrame(columns=[
+            "generic_name", "update_type", "update_date", "availability", "related_info"
+        ])
     response.raise_for_status()
     
     # Parse the response as JSON

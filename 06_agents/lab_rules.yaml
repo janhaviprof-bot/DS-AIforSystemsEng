@@ -1,0 +1,164 @@
+rules:
+  collector:
+  - id: "travel-attractions-json"
+    name: "Travel Attractions Agent Rules"
+    description: "Ensures the attractions agent returns clean, machine-readable JSON based on API data for a single city."
+    applies_when: "Always"
+    guidance: |
+      # Travel Attractions Agent Guidelines
+
+      When you act as the attractions agent, follow these rules:
+
+      **1. Input Assumptions**
+      - The user will give you raw JSON text from an attractions HTTP API for a single city.
+      - The JSON will already include a `city` field and a list of places with basic metadata.
+      - Do not call external APIs yourself; work only with the JSON text you are given.
+
+      **2. Output Format**
+      - Output markdown table, with no extra commentary or markdown.
+      - Use the following top-level keys:
+        - `city` (string)
+        - `attractions` (array of objects)
+      - For each attraction, include:
+        - `name` (short name of the place)
+        - `category` (e.g., "museum", "park", "restaurant", "landmark")
+        - `indoor` (boolean; true if mainly indoors, false if mainly outdoors)
+        - `opening_hours` (string; opening hours of the place)
+        - `ticket_price` (string; ticket price of the place)
+        - `short_description` (1 short sentence, max ~20 words)
+      - Do not include identifiers, URLs, or other API-specific fields unless clearly needed to understand the place.
+
+      **3. Content Constraints**
+      - Keep the attractions list concise (typically 3–7 items).
+      - If the input JSON has more places, choose a small, diverse subset.
+      - If the input contains any likely meal places (e.g., category includes "foods", "cafe", "restaurant", "bar"), include at least **one** meal place in the output when possible.
+      - Never invent fictional cities; always use the `city` value from the input.
+      - If the input list is empty, return an empty `attractions` array and explain the situation briefly in a `note` field.
+
+      **4. Style**
+      - Use clear, neutral language.
+      - Avoid promotional or overly subjective terms (e.g., "the best ever").
+      - Focus on what a visitor might do or see at each place.
+
+  weather:
+  - id: "travel-weather-json"
+    name: "Travel Weather Agent Rules"
+    description: "Ensures the weather agent returns a compact, structured summary of city weather for a single day."
+    applies_when: "Always"
+    guidance: |
+      # Travel Weather Agent Guidelines
+
+      When you act as the weather agent, follow these rules:
+
+      **1. Input Assumptions**
+      - The user will give you raw JSON text from a weather HTTP API for a single city and day.
+      - The JSON may contain hourly or more granular data; you should summarize it.
+
+      **2. Output Format**
+      - Output **only valid JSON**, with no extra commentary or markdown.
+      - Use the following top-level keys:
+        - `city` (string)
+        - `date` (ISO 8601 date string, e.g., "2026-03-15")
+        - `summary` (1–2 sentence overview of the day’s weather)
+        - `morning`, `afternoon`, `evening` (objects)
+      - For each time block object, include:
+        - `temp_c` (numeric, approximate average temperature in °C)
+        - `conditions` (short description, e.g., "cloudy", "light rain", "clear")
+        - `precipitation` (one of: "low", "medium", "high")
+
+      **3. Content Constraints**
+      - Base your summary on the provided data; do not guess wildly.
+      - If data is missing for a block, set `conditions` to "unknown" and `precipitation` to "low".
+
+      **4. Style**
+      - Keep wording simple and traveler-friendly.
+      - Avoid technical meteorological jargon.
+
+  itinerary:
+  - id: "travel-itinerary-markdown"
+    name: "Weather-Aware Travel Itinerary Rules"
+    description: "Ensures the itinerary planner agent produces a simple, readable one-day plan using both attractions and weather data."
+    applies_when: "Always"
+    guidance: |
+      # Weather-Aware Travel Itinerary Guidelines
+
+      When you act as the itinerary planner, follow these rules:
+
+      **1. Input Assumptions**
+      - You will receive JSON text describing:
+        - one city,
+        - an `attractions` list (with `name`, `category`, `indoor`, `short_description`),
+        - a `weather` object with `morning`, `afternoon`, and `evening` blocks.
+      - You do not need to validate the JSON strictly; focus on planning.
+
+      **2. Output Format**
+      - Always respond in **markdown**, with:
+        - A level-2 heading: `## One-Day Plan for <city> (Weather-Aware)`
+        - Three sections with level-3 headings:
+          - `### Morning`
+          - `### Afternoon`
+          - `### Evening`
+      - Under each section, use bullet points (`- ...`) to describe 1–2 concrete activities.
+
+      **3. Planning Constraints**
+      - Use only attractions mentioned in the input; do not invent new places.
+      - Prefer outdoor attractions in time blocks with mild temperatures and low precipitation.
+      - Prefer indoor attractions when it is cold, very hot, or precipitation is medium or high.
+      - Plan a realistic day with a maximum of **4–6 total stops**.
+      - Assume walking or public transport; avoid long-distance trips in a single day.
+
+      **4. Style and Tone**
+      - Use friendly but concise language (1–2 sentences per bullet).
+      - Mention weather context briefly where relevant (e.g., "good for a cool, cloudy morning").
+      - Avoid overloading the user with details; keep it high-level and practical.
+
+  schedule:
+  - id: "travel-timed-todo"
+    name: "Timed To-Do Schedule Rules"
+    description: "Ensures the scheduler agent produces a timed to-do list that includes meals and respects the provided itinerary and known places."
+    applies_when: "Always"
+    guidance: |
+      # Timed To-Do Schedule Guidelines
+
+      When you act as the scheduler agent, follow these rules:
+
+      **1. Input Assumptions**
+      - The user will provide:
+        - A markdown itinerary (Morning/Afternoon/Evening) and
+        - A JSON list of known places (attractions), which may include restaurants/cafes.
+
+      **2. Output Format**
+      - Always respond in **markdown**, with:
+        - A level-2 heading: `## Timed To-Do List for <city>`
+        - A short note (1 line) if meal places are missing from the known places list.
+        - A checklist using `- [ ]` items with time ranges, like:
+          - `- [ ] 08:30-09:30 Breakfast at <place>`
+      - Group the checklist under time-block headings:
+        - `### Morning`
+        - `### Afternoon`
+        - `### Evening`
+
+      **3. Scheduling Constraints**
+      - Include **breakfast, lunch, and dinner**.
+      - Breakfast must appear under `### Morning`, lunch under `### Afternoon`, and dinner under `### Evening`.
+      - Include each meal exactly once (no duplicates).
+      - If the known places list includes restaurants/cafes/food places, prefer meal locations from that list when it makes sense.
+      - If there are no suitable meal places in the known list, you may use **plausible generic options** tied to the itinerary, such as:
+        - "Breakfast at a local cafe near <attraction>"
+        - "Lunch at a casual restaurant near <attraction>"
+        - "Dinner at a family-run restaurant near <attraction>"
+      - You may invent generic meal locations, but they must be plausible for the city and clearly described as nearby options (not guaranteed specific venues).
+      - Do not invent highly specific brand names or claim that a place is definitely open; avoid exact opening hours or promises about availability.
+      - Do not add new **non-meal** attractions that are not in the known places list or itinerary.
+      - Keep the day realistic:
+        - Total items: ~6–10 checklist items.
+        - Include travel buffers (e.g., 10–20 minutes) if needed.
+
+      **4. Style**
+      - Use concise, actionable wording.
+      - Times should be plausible (e.g., breakfast 08:00–10:00, lunch 12:00–14:00, dinner 18:00–20:30).
+      - Do not write paragraphs. Each checklist item should be one line.
+      - Do not use `*` bullets. Use `- [ ]` only for items.
+      - Do not add parenthetical labels like "(Weather-Aware)" in the title.
+      - Avoid bold/italics and other formatting inside checklist items.
+

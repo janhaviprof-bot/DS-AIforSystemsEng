@@ -1,4 +1,5 @@
 # 06_alms_cloud.py
+#It uses audio 
 # Using Audio Language Models (ALMs) with Cloud APIs
 # Pairs with 06_alms_cloud.R
 # Tim Fraser

@@ -25,7 +25,7 @@ from functions import agent_run, get_shortages, df_as_text
 # 1. CONFIGURATION ###################################
 
 # Select model of interest
-MODEL = "smollm2:135m"
+MODEL = "smollm2:1.7b"
 
 # 2. LOAD RULES FROM YAML ###################################
 

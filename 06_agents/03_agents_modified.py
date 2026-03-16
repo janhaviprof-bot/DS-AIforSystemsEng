@@ -30,7 +30,7 @@ from functions import agent_run, get_shortages, df_as_text
 # 1. CONFIGURATION ###################################
 
 # Select model of interest
-MODEL = "smollm2:135m"
+MODEL = "smollm2:1.7b"
 
 # We will use the FDA Drug Shortages API to get data on drug shortages.
 # https://open.fda.gov/apis/drug/drugshortages/
@@ -47,54 +47,41 @@ categories = [
 
 # 2. WORKFLOW EXECUTION ###################################
 
-# Start with an input type of medication to search
-input_category = {"category": "Psychiatry"}
-
 # Task 1 - Function -------------------------
-# Get data on drug shortages for the category of interest
-data = get_shortages(category=input_category["category"], limit=500)
+# Get data on drug shortages for all categories; keep current availability (latest per drug per category)
+data_list = []
+for cat in categories:
+    df = get_shortages(category=cat, limit=500)
+    df["category"] = cat
+    data_list.append(df)
+data = pd.concat(data_list, ignore_index=True)
 
-
-# Process the data into some summary table
-# Filter for items that are currently unavailable
-
-
-stat = data.groupby("generic_name").apply(lambda x: x.loc[x["update_date"].idxmax()])
-# stat = (data
-#         .groupby("generic_name")
-#         .apply(lambda x: x.loc[x["update_date"].idxmax()])
-#         .reset_index(drop=True)
-#         .query("availability == 'Unavailable'"))
-
-# data
-
-# NOTE: The API data in 'data' chang
-# es over time,
-# so sometimes if you filter to availability == "Unavailable",
-# there literally may be no rows with that trait.
-# If that's the case, the 'stat' table will be empty.
-# Just remove the line `.query("availability" == "Unavailable")` if that's the case.
+# Process the data: latest record per drug per category (current availability)
+stat = (
+    data.groupby(["generic_name", "category"])
+    .apply(lambda x: x.loc[x["update_date"].idxmax()])
+    .reset_index(drop=True)
+)
+# Optional: filter to currently unavailable only (can make stat empty if API has none)
+# stat = stat.query("availability == 'Unavailable'")
 
 
 # Convert the data to a text string
 #You dont need to convert in markdown to save token you can save it seperated by comma.
 task2 = df_as_text(stat)
 
-# Task 2 - Analyst Agent -------------------------
+# Task 2 - Summary Agent -------------------------
 # This agent analyzes the data and returns a markdown table
-role2 = "I analyze medicine shortage data provided by the user in a table, and return a markdown table of currently ongoing shortages."
+role2 = "I analyze medicine shortage data provided by the user in a table, and summarise the data in summary form ."
 result2 = agent_run(role=role2, task=task2, model=MODEL, output="text")
 
-result2
-
-# Task 3 - Press Release Agent -------------------------
-# This agent takes the analysis and writes a press release
-role3 = "I write a 1-page press release on the currently ongoing shortages, using the analysis provided by the user."
+# Task 3 - Finance Agent -------------------------
+# This agent takes the summary and provides analysis and prediction
+role3 = "I take the summary data of the available drugs and provide financial analysis on how it will affect the drug market."
 result3 = agent_run(role=role3, task=result2, model=MODEL, output="text")
-result3
 
 # 3. VIEW RESULTS ###################################
 
-# View press release
-print("📰 Press Release:")
+# View Final Analysis
+print("📰 Market Analysis:")
 print(result3)

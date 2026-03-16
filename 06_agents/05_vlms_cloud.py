@@ -1,4 +1,5 @@
 # 05_vlms_cloud.py
+#It uses images to to analyse like OCR does
 # Using Visual Language Models (VLMs) with Ollama Cloud
 # Pairs with 05_vlms_cloud.R
 # Tim Fraser
@@ -63,7 +64,7 @@ image_path = "06_agents/05_coffeeshop.jpg"
 if not os.path.exists(image_path):
     raise FileNotFoundError(f"Image not found: {image_path}")
 
-# Shrink image to 50% of the original size
+# Shrink image to 50% of the original size-to reduce token use
 with Image.open(image_path) as img:
     width, height = img.size
     new_size = (max(1, int(width * 0.5)), max(1, int(height * 0.5)))
@@ -102,7 +103,7 @@ def query(image_file_path, user_prompt, model_name, api_key):
     with open(image_file_path, "rb") as image_file:
         image_base64 = base64.b64encode(image_file.read()).decode("utf-8")
 
-    # Build the request body (Ollama chat format)
+    # Build the request body (Ollama chat format) : we have used generate format before which is suitable for back and forth convo
     body = {
         "model": model_name,
         "messages": [

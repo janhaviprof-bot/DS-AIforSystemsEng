@@ -25,6 +25,7 @@ rules:
       - Include summary statistics when relevant
       - Use clear, professional language
 
+
   press_release:
   - id: "press-release-standards"
     name: "Press Release Writing Standards"
@@ -37,15 +38,14 @@ rules:
 
       **1. Structure:**
       - Start with a compelling headline (max 80 characters)
-      - Include a strong lead paragraph (who, what, when, where, why)
-      - Use the inverted pyramid structure (most important info first)
+      - Include a strong lead paragraph add whether producting positive or negative impact (who, what, when, where, why)
+      - End lead paragraph with financial step can be taken to mitigate the impact.
+      - Use the inverted pyramid structure afterwards (most important info first)
       - Keep paragraphs short (2-3 sentences max)
 
       **2. Content Requirements:**
-      - Always cite specific data and numbers from the analysis
       - Include relevant dates and timeframes
       - Mention the data source (FDA Drug Shortages API)
-      - Focus on impact and implications for stakeholders
 
       **3. Tone & Style:**
       - Use professional, objective language
@@ -56,5 +56,5 @@ rules:
       **4. Length:**
       - Target 300-400 words for a 1-page press release
       - Include a brief summary at the end
-      - No fluff - every sentence should add value
+      - Use indicative language for financial impact
 
