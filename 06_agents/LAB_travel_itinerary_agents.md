@@ -57,3 +57,20 @@ At a high level, the Python script:
 
 All calls to the language model go through `agent_run(...)` in `functions.py`, and rules for each agent’s behavior are stored in `lab_rules.yaml` for clarity and reuse.
 
+### Agents and APIs (Mermaid Diagram)
+
+```mermaid
+flowchart LR
+    City[City name] --> OT[OpenTripMapAPI]
+    City --> OM[OpenMeteoAPI]
+
+    OT --> Agent1[Agent1_Attractions]
+    OM --> Agent2[Agent2_Weather]
+
+    Agent1 --> Agent3[Agent3_Itinerary]
+    Agent2 --> Agent3
+
+    Agent3 --> Agent4[Agent4_Scheduler]
+```
+
+
