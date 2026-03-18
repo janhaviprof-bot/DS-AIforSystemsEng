@@ -28,6 +28,7 @@ Create your own data source (text file, CSV, or SQLite database) relevant to you
   - [`02_txt.py`](02_txt.py) or [`02_txt.R`](02_txt.R) for text files
   - [`03_csv.py`](03_csv.py) or [`03_csv.R`](03_csv.R) for CSV files
   - [`04_sqlite.py`](04_sqlite.py) or [`04_sqlite.R`](04_sqlite.R) for SQLite databases
+  - [`05_embed.py`](05_embed.py) or [`05_embed.R`](05_embed.R) for Vector Embedding + Semantic Search (Industry Standard)
 - [ ] Adapt the script's search function to match your data structure and needs:
 - [ ] Test your search function with a sample query.
 

@@ -21,6 +21,7 @@
 # sqlite-vec (vec0), and run KNN search inside the database. Pairs with 05_embed.R.
 # Requires sqlite-vec extension; Python uses sqlite_vec.load() to load it.
 
+
 # 0. SETUP ###################################
 
 ## 0.1 Load Packages ##########################
@@ -30,10 +31,28 @@
 # sentence-transformers will take a fair amount of space, fyi
 
 # Prefer local 07_rag/functions.py over the PyPI "functions" package (incompatible with Python 3).
-import os
-# import sys
 import json
-# sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import os        # for file path operations
+import runpy     # for executing another Python script
+from dotenv import load_dotenv
+import sqlite3
+import requests  # for HTTP requests
+from sentence_transformers import SentenceTransformer
+from sqlite_vec import load as sqlite_vec_load, serialize_float32
+
+# 0.2 Working Directory #################################
+
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__name__))
+os.chdir(script_dir)
+
+## 0.3 Start Ollama Server (source 01_ollama.py) #################################
+
+# Execute 01_ollama.py as if we were sourcing it in R.
+# This will configure environment variables and start `ollama serve` in the background.
+ollama_script_path = os.path.join(os.getcwd(), "01_ollama.py")
+_ = runpy.run_path(ollama_script_path)
+
 
 # Load .env into environment if available (mirrors R readRenviron(".env"))
 try:
@@ -42,19 +61,16 @@ try:
 except ImportError:
     pass
 
-import sqlite3
-import requests  # for HTTP requests
-from sentence_transformers import SentenceTransformer
-from sqlite_vec import load as sqlite_vec_load, serialize_float32
-
 ## 0.2 Configuration ##########################
 
 # Path to sqlite-vec extension is handled by sqlite_vec.load() in Python.
 # To find the path for use in R, in git bash run:
 # python -c "import sqlite_vec; print(sqlite_vec.loadable_path())"
 
-DB_PATH = "07_rag/data/embed.db"  # path to your new vector embeddings database
-DOCUMENT = "07_rag/data/lower_manhattan_recovery_plan.txt"  # path to text doc
+DB_PATH = "data/embed.db"  # path to your new vector embeddings database
+if os.path.exists(DB_PATH): os.remove(DB_PATH) 
+else: print("No database found, creating new one.")
+DOCUMENT = "data/lower_manhattan_recovery_plan.txt"  # path to text doc
 EMBED_MODEL = "all-MiniLM-L6-v2"  # model for embedding text into vectors
 VEC_DIM = 384   # all-MiniLM-L6-v2 output size
 MODEL = "gpt-oss:20b-cloud"  # cloud model (Ollama Cloud; for RAG answer step)
@@ -191,7 +207,11 @@ def search_embed_sql(conn, query, k=3):
     return out
 
 
-# 2. WORKFLOW ################
+# 2. SEMANTIC SEARCHWORKFLOW ################
+
+print("--------------------------------")
+print("🔍 SEMANTIC SEARCH WORKFLOW:")
+print("--------------------------------")
 
 # Finally, in this section, we'll put it all together and build the index from the document.
 
@@ -232,6 +252,10 @@ else:
 # conn.execute("SELECT * FROM chunks LIMIT 3;").fetchall()
 # conn.execute("SELECT * FROM vec_chunks LIMIT 3;").fetchall()
 
+print("--------------------------------")
+print("🔍 PREVIEW VEC_CHUNKS TABLE:")
+print("--------------------------------")
+
 # Preview the vec_chunks table (we show chunks since vec_chunks is virtual)
 preview = conn.execute("SELECT id, text FROM chunks LIMIT 5").fetchall()
 for row in preview:
@@ -240,10 +264,20 @@ for row in preview:
 # Do a test search
 test = search_embed_sql(conn, "vulnerability", k=3)
 
+print("--------------------------------")
+print("🔍 TEST SEARCH:")
+print("--------------------------------")
+
+print(test)
+
 # Disconnect from the database
 conn.close()
 
 # 3. RAG WORKFLOW #############################
+
+print("--------------------------------")
+print("🔍 RAG WORKFLOW:")
+print("--------------------------------")
 
 # Reconnect to the database
 conn = connect_db(DB_PATH)
@@ -264,6 +298,11 @@ role = (
 
 result2 = agent_run(role=role, task=f"{query} | {context}", model=MODEL)
 print(result2)
+
+
+print("--------------------------------")
+print("🔍 FACT-CHECKING WORKFLOW:")
+print("--------------------------------")
 
 # Or, perhaps we rate the truthfulness of a statement..
 role = (

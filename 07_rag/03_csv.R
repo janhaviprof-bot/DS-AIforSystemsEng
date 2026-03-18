@@ -8,12 +8,12 @@ library(readr) # for reading CSV files
 library(httr2) # for HTTP requests
 library(jsonlite) # for JSON operations
 library(ollamar) # for interacting with the LLM
-source("06_rag/functions.R")
+source("07_rag/functions.R")
 
-MODEL = "smollm2:135m" # use this small model (no function calling, < 200 MB)
+MODEL = "smollm2:1.7b" # use this small model
 PORT = 11434 # use this default port
 OLLAMA_HOST = paste0("http://localhost:", PORT) # use this default host
-DOCUMENT = "06_rag/data/pokemon.csv" # path to the document to search
+DOCUMENT = "07_rag/data/pokemon.csv" # path to the document to search
 
 # Define a search function we will operate programmatically
 search = function(query, document){

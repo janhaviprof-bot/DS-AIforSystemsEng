@@ -39,7 +39,16 @@ library(dplyr) # for data wrangling
 library(reticulate) # for loading python libraries in R
 library(httr2)    # for HTTP requests
 library(jsonlite) # for json operations
+library(stringr) # for string operations
 readRenviron(".env") # Read the .env file
+
+# Check Python configuration
+py_config()
+# Install Python packages
+py_require("sentence-transformers")
+py_require("sqlite-vec")
+# Check Python packages
+py_list()
 
 st = import("sentence_transformers")
 
@@ -51,11 +60,11 @@ VEC_EXTENSION_PATH = "C:/Users/tmf77/AppData/Local/Programs/Python/Python312/Lib
 # python -c "import sqlite_vec; print(sqlite_vec.loadable_path())"
 
 DB_PATH = "07_rag/data/embed.db" # path to your new vector embeddings database
+if(file.exists(DB_PATH)) { unlink(DB_PATH, force = TRUE) }
 DOCUMENT = "07_rag/data/lower_manhattan_recovery_plan.txt" # path to text doc
 EMBED_MODEL = "all-MiniLM-L6-v2" # model for embedding text into vectors
 VEC_DIM = 384L   # all-MiniLM-L6-v2 output size
 MODEL = "gpt-oss:20b-cloud" # cloud model (Ollama Cloud; for RAG answer step)
-
 
 # 1. FUNCTIONS ################################
 
@@ -200,9 +209,12 @@ message("Found ", n, " chunks in the document.")
 # Connect and load sqlite-vec. If path not set, try pip-installed sqlite_vec (reticulate).
 conn = dbConnect(RSQLite::SQLite(), DB_PATH)
 
+# If you need to start over, disconnect from the database and remove the database file
+# dbDisconnect(conn)
+# unlink(DB_PATH, force = TRUE)
+
 # Load the SQLite-vec extension, in order to use vector search
 dbExecute(conn, sprintf("SELECT load_extension(%s)", dbQuoteString(conn, VEC_EXTENSION_PATH)))
-
 
 # Create the vec_chunks table
 # vec0 virtual table: id, embedding (float32), +text. Cosine distance for similarity search.
@@ -227,10 +239,14 @@ if (n_chunks == 0) {
 conn %>% tbl("vec_chunks")
 
 
-
 # Do a test search
 test = search_embed_sql(conn, "vulnerability", k = 3)
 
+print("--------------------------------")
+print("🔍 TEST SEARCH:")
+print("--------------------------------")
+
+print(test)
 
 # Disconnect from the database
 dbDisconnect(conn)

@@ -9,14 +9,26 @@
 
 ## 0.1 Load Packages #################################
 
+import os        # for file path operations
+import runpy     # for executing another Python script
 import requests  # for HTTP requests
 import json      # for working with JSON
-import os        # for file path operations
 
-# If you haven't already, install the requests package...
-# pip install requests
+## 0.2 Working Directory #################################
 
-## 0.2 Load Functions #################################
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__name__))
+os.chdir(script_dir)
+
+## 0.3 Start Ollama Server (source 01_ollama.py) #################################
+
+# Execute 01_ollama.py as if we were sourcing it in R.
+# This will configure environment variables and start `ollama serve` in the background.
+ollama_script_path = os.path.join(os.getcwd(), "01_ollama.py")
+_ = runpy.run_path(ollama_script_path)
+
+
+## 0.4 Load Functions #################################
 
 # Load helper functions for agent orchestration
 from functions import agent_run
@@ -24,10 +36,10 @@ from functions import agent_run
 ## 0.3 Configuration #################################
 
 # Select model of interest
-MODEL = "smollm2:135m"  # use this small model (no function calling, < 200 MB)
+MODEL = "smollm2:1.7b"  # use this small model
 PORT = 11434  # use this default port
 OLLAMA_HOST = f"http://localhost:{PORT}"  # use this default host
-DOCUMENT = "06_rag/data/sample.txt"  # path to the text document to search
+DOCUMENT = "data/sample.txt"  # path to the text document to search
 
 # 1. SEARCH FUNCTION ###################################
 
@@ -77,7 +89,7 @@ def search_text(query, document_path):
 print("Testing search function...")
 test_result = search_text("supervised", DOCUMENT)
 print(f"Found {test_result['num_lines']} matching lines")
-print()
+print(test_result)
 
 # 3. RAG WORKFLOW ###################################
 
@@ -105,7 +117,6 @@ result2 = agent_run(
 # View result
 print("📝 Generated Explanation:")
 print(result2)
-print()
 
 # 4. ALTERNATIVE: MANUAL CHAT APPROACH ###################################
 

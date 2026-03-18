@@ -13,9 +13,22 @@ import sqlite3  # for SQLite database operations (built-in)
 import pandas as pd  # for data manipulation
 import requests  # for HTTP requests
 import json      # for working with JSON
+import os        # for file path operations
+import runpy     # for executing another Python script
 
-# If you haven't already, install these packages...
-# pip install pandas requests
+# 0.2 Working Directory #################################
+
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__name__))
+os.chdir(script_dir)
+
+## 0.3 Start Ollama Server (source 01_ollama.py) #################################
+
+# Execute 01_ollama.py as if we were sourcing it in R.
+# This will configure environment variables and start `ollama serve` in the background.
+ollama_script_path = os.path.join(os.getcwd(), "01_ollama.py")
+_ = runpy.run_path(ollama_script_path)
+
 
 ## 0.2 Load Functions #################################
 
@@ -25,15 +38,16 @@ from functions import agent_run
 ## 0.3 Configuration #################################
 
 # Select model of interest
-MODEL = "smollm2:135m"  # use this small model (no function calling, < 200 MB)
+MODEL = "smollm2:1.7b"  # use this small model
 PORT = 11434  # use this default port
 OLLAMA_HOST = f"http://localhost:{PORT}"  # use this default host
-DB_PATH = "06_rag/data/papers.db"  # path to the SQLite database
+DB_PATH = "data/papers.db"  # path to the SQLite database
 
 # 1. DATABASE CONNECTION ###################################
 
 # Connect to database
 conn = sqlite3.connect(DB_PATH)
+
 
 # 2. SEARCH FUNCTION ###################################
 
