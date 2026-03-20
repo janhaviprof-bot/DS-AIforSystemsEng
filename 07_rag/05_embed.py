@@ -21,7 +21,6 @@
 # sqlite-vec (vec0), and run KNN search inside the database. Pairs with 05_embed.R.
 # Requires sqlite-vec extension; Python uses sqlite_vec.load() to load it.
 
-
 # 0. SETUP ###################################
 
 ## 0.1 Load Packages ##########################
@@ -34,16 +33,12 @@
 import json
 import os        # for file path operations
 import runpy     # for executing another Python script
-from dotenv import load_dotenv
-import requests  # for HTTP requests
-import sqlite3
-from sentence_transformers import SentenceTransformer
-from sqlite_vec import load as sqlite_vec_load, serialize_float32
+import time
 
 # 0.2 Working Directory #################################
 
 # Get the directory of the current script
-script_dir = os.path.dirname(os.path.abspath(__name__))
+script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 
 ## 0.3 Start Ollama Server (source 01_ollama.py) #################################
@@ -53,13 +48,17 @@ os.chdir(script_dir)
 ollama_script_path = os.path.join(os.getcwd(), "01_ollama.py")
 _ = runpy.run_path(ollama_script_path)
 
-
 # Load .env into environment if available (mirrors R readRenviron(".env"))
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
     pass
+
+import sqlite3
+import requests  # for HTTP requests
+from sentence_transformers import SentenceTransformer
+from sqlite_vec import load as sqlite_vec_load, serialize_float32
 
 ## 0.2 Configuration ##########################
 
@@ -68,8 +67,6 @@ except ImportError:
 # python -c "import sqlite_vec; print(sqlite_vec.loadable_path())"
 
 DB_PATH = "data/embed.db"  # path to your new vector embeddings database
-if os.path.exists(DB_PATH): os.remove(DB_PATH) 
-else: print("No database found, creating new one.")
 DOCUMENT = "data/lower_manhattan_recovery_plan.txt"  # path to text doc
 EMBED_MODEL = "all-MiniLM-L6-v2"  # model for embedding text into vectors
 VEC_DIM = 384   # all-MiniLM-L6-v2 output size
@@ -189,7 +186,7 @@ def search_embed_sql(conn, query, k=3):
     cur = conn.execute(
         """
         SELECT rowid, distance
-        FROM vec_chunks
+        FROM vec_chunks         
         WHERE embedding MATCH ?
         ORDER BY distance
         LIMIT ?
@@ -206,19 +203,8 @@ def search_embed_sql(conn, query, k=3):
         out.append({"id": rowid, "score": score, "text": text})
     return out
 
-# Connect and load sqlite-vec.
-def connect_db(path=DB_PATH):
-    conn = sqlite3.connect(path)
-    conn.enable_load_extension(True)
-    sqlite_vec_load(conn)
-    conn.enable_load_extension(False)
-    return conn
 
-# 2. SEMANTIC SEARCHWORKFLOW ################
-
-print("--------------------------------")
-print("🔍 SEMANTIC SEARCH WORKFLOW:")
-print("--------------------------------")
+# 2. WORKFLOW ################
 
 # Finally, in this section, we'll put it all together and build the index from the document.
 
@@ -227,35 +213,34 @@ chunks = get_text(DOCUMENT)
 n = len(chunks)
 print(f"Found {n} chunks in the document.")
 
-
+# Connect and load sqlite-vec.
+def connect_db(path=DB_PATH):
+    conn = sqlite3.connect(path)
+    conn.enable_load_extension(True)
+    sqlite_vec_load(conn)
+    conn.enable_load_extension(False)
+    return conn
 
 conn = connect_db(DB_PATH)
 
 # Create the chunks table and vec_chunks virtual table.
 # vec0 virtual table: rowid, embedding (float32). Cosine distance for similarity search.
 # We keep id and text in chunks so we can join after MATCH.
-conn.execute("CREATE TABLE IF NOT EXISTS chunks (id INTEGER PRIMARY KEY, text TEXT NOT NULL)")
+# Drop both tables together so they stay in sync (vec_chunks is recreated empty each run).
 conn.execute("DROP TABLE IF EXISTS vec_chunks")
-conn.execute(f"CREATE VIRTUAL TABLE IF NOT EXISTS vec_chunks USING vec0(embedding float[{VEC_DIM}] distance_metric=cosine)")
+conn.execute("DROP TABLE IF EXISTS chunks")
+conn.execute("CREATE TABLE chunks (id INTEGER PRIMARY KEY, text TEXT NOT NULL)")
+conn.execute(f"CREATE VIRTUAL TABLE vec_chunks USING vec0(embedding float[{VEC_DIM}] distance_metric=cosine)")
 conn.commit()
 
 # Construct the embedding database (takes longer for larger text documents)
-n_chunks = conn.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
-if n_chunks == 0:
-    import time
-    start = time.perf_counter()
-    build_index_from_document(conn, chunks)
-    elapsed = time.perf_counter() - start
-    print(f"Time taken to build index: {elapsed:.2f} seconds\n")
-else:
-    print("Using existing embedding index.\n")
+start = time.perf_counter()
+build_index_from_document(conn, chunks)
+elapsed = time.perf_counter() - start
+print(f"Time taken to build index: {elapsed:.2f} seconds\n")
 #
 # conn.execute("SELECT * FROM chunks LIMIT 3;").fetchall()
 # conn.execute("SELECT * FROM vec_chunks LIMIT 3;").fetchall()
-
-print("--------------------------------")
-print("🔍 PREVIEW VEC_CHUNKS TABLE:")
-print("--------------------------------")
 
 # Preview the vec_chunks table (we show chunks since vec_chunks is virtual)
 preview = conn.execute("SELECT id, text FROM chunks LIMIT 5").fetchall()
@@ -265,20 +250,10 @@ for row in preview:
 # Do a test search
 test = search_embed_sql(conn, "vulnerability", k=3)
 
-print("--------------------------------")
-print("🔍 TEST SEARCH:")
-print("--------------------------------")
-
-print(test)
-
 # Disconnect from the database
 conn.close()
 
 # 3. RAG WORKFLOW #############################
-
-print("--------------------------------")
-print("🔍 RAG WORKFLOW:")
-print("--------------------------------")
 
 # Reconnect to the database
 conn = connect_db(DB_PATH)
@@ -299,11 +274,6 @@ role = (
 
 result2 = agent_run(role=role, task=f"{query} | {context}", model=MODEL)
 print(result2)
-
-
-print("--------------------------------")
-print("🔍 FACT-CHECKING WORKFLOW:")
-print("--------------------------------")
 
 # Or, perhaps we rate the truthfulness of a statement..
 role = (
