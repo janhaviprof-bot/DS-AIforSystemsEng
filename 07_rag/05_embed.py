@@ -35,8 +35,8 @@ import json
 import os        # for file path operations
 import runpy     # for executing another Python script
 from dotenv import load_dotenv
-import sqlite3
 import requests  # for HTTP requests
+import sqlite3
 from sentence_transformers import SentenceTransformer
 from sqlite_vec import load as sqlite_vec_load, serialize_float32
 
@@ -206,6 +206,13 @@ def search_embed_sql(conn, query, k=3):
         out.append({"id": rowid, "score": score, "text": text})
     return out
 
+# Connect and load sqlite-vec.
+def connect_db(path=DB_PATH):
+    conn = sqlite3.connect(path)
+    conn.enable_load_extension(True)
+    sqlite_vec_load(conn)
+    conn.enable_load_extension(False)
+    return conn
 
 # 2. SEMANTIC SEARCHWORKFLOW ################
 
@@ -220,13 +227,7 @@ chunks = get_text(DOCUMENT)
 n = len(chunks)
 print(f"Found {n} chunks in the document.")
 
-# Connect and load sqlite-vec.
-def connect_db(path=DB_PATH):
-    conn = sqlite3.connect(path)
-    conn.enable_load_extension(True)
-    sqlite_vec_load(conn)
-    conn.enable_load_extension(False)
-    return conn
+
 
 conn = connect_db(DB_PATH)
 
