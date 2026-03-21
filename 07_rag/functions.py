@@ -134,7 +134,65 @@ def agent_run(role, task, tools=None, output="text", model=DEFAULT_MODEL):
     return resp
 
 
-# 2. DATA CONVERSION FUNCTION ###################################
+# 2. AIRCRAFT CHUNKS FOR RAG ###################################
+
+# Spec fields to include in aircraft chunks for semantic search (filter/sort queries)
+AIRCRAFT_SPEC_FIELDS = [
+    "manufacturer", "first_flight", "status", "range_km", "cruise_speed_kmh",
+    "max_speed_kmh", "capacity_passengers", "crew", "length_m", "wingspan_m",
+]
+
+
+def get_aircraft_chunks(csv_path=None, include_specs=True):
+    """
+    Read aircraft.csv and build text chunks for RAG semantic search.
+    Each chunk includes name, type, description, and optional spec fields
+    (manufacturer, first_flight, status, range_km, etc.) so queries like
+    "long range", "Airbus", "high capacity" match relevant aircraft.
+
+    Parameters:
+    -----------
+    csv_path : str, optional
+        Path to aircraft.csv. Default: data/aircraft.csv relative to script dir.
+    include_specs : bool
+        If True (default), append spec fields to each chunk for better search.
+
+    Returns:
+    --------
+    list of str
+        Text chunks, one per aircraft
+    """
+    import os
+    import csv as csv_module
+
+    if csv_path is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        csv_path = os.path.join(script_dir, "data", "aircraft.csv")
+
+    chunks = []
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv_module.DictReader(f)
+        for row in reader:
+            parts = [
+                f"Aircraft: {row.get('name', '')}.",
+                f"Type: {row.get('type', '')}.",
+                f"{row.get('short_description', '')}",
+            ]
+            if include_specs:
+                specs = []
+                for field in AIRCRAFT_SPEC_FIELDS:
+                    val = row.get(field, "").strip()
+                    if val:
+                        label = field.replace("_", " ").title()
+                        specs.append(f"{label}: {val}")
+                if specs:
+                    parts.append(" ".join(specs))
+            chunks.append(" ".join(parts).strip())
+
+    return chunks
+
+
+# 3. DATA CONVERSION FUNCTION ###################################
 
 def df_as_text(df):
     """

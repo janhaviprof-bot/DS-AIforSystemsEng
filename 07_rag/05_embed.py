@@ -70,29 +70,29 @@ DB_PATH = "data/embed.db"  # path to your new vector embeddings database
 DOCUMENT = "data/lower_manhattan_recovery_plan.txt"  # path to text doc
 EMBED_MODEL = "all-MiniLM-L6-v2"  # model for embedding text into vectors
 VEC_DIM = 384   # all-MiniLM-L6-v2 output size
-MODEL = "gpt-oss:20b-cloud"  # cloud model (Ollama Cloud; for RAG answer step)
+MODEL = "gpt-4o-mini"  # OpenAI model for RAG answer step (cost-effective)
 
 
 # 1. FUNCTIONS ################################
 
 # We're going to define a few helper functions to help us with the RAG workflow.
 
-# Let's define our own custom agent_run function, since we're using Ollama Cloud.
-# Expects an Ollama Cloud model name
-def agent_run(role, task, model="gpt-oss:20b-cloud"):
+# Let's define our own custom agent_run function, using OpenAI API.
+# Expects an OpenAI model name (e.g. gpt-4o-mini, gpt-3.5-turbo)
+def agent_run(role, task, model="gpt-4o-mini"):
     # Get API key from environment variable
-    OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
     # Check if API key is set
-    if not OLLAMA_API_KEY:
-        raise ValueError("OLLAMA_API_KEY not found in .env file. Please set it up first.")
+    if not OPENAI_API_KEY:
+        raise ValueError("OPENAI_API_KEY not found in .env file. Please set it up first.")
 
-    # Ollama Cloud API endpoint
-    url = "https://ollama.com/api/chat"
+    # OpenAI Chat Completions API endpoint
+    url = "https://api.openai.com/v1/chat/completions"
 
     # Construct the request body
     body = {
-        "model": model,  # Low-cost cloud model
+        "model": model,
         "messages": [
             {"role": "system", "content": role},
             {"role": "user", "content": task}
@@ -100,11 +100,11 @@ def agent_run(role, task, model="gpt-oss:20b-cloud"):
         "stream": False  # Non-streaming response
     }
 
-    # Build and send the POST request to Ollama Cloud API
+    # Build and send the POST request to OpenAI API
     response = requests.post(
         url,
         headers={
-            "Authorization": f"Bearer {OLLAMA_API_KEY}",
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
             "Content-Type": "application/json"
         },
         json=body
@@ -114,9 +114,8 @@ def agent_run(role, task, model="gpt-oss:20b-cloud"):
     # Parse the response JSON
     data = response.json()
 
-    # Extract the model's reply
-    # Ollama chat API returns message content directly
-    output = data["message"]["content"]
+    # Extract the model's reply (OpenAI returns choices[0].message.content)
+    output = data["choices"][0]["message"]["content"]
     return output
 
 
