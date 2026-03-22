@@ -183,7 +183,10 @@ results = search_embed_sql(conn, query, k=5)
 context = "\n\n---\n\n".join(row["text"] for row in results)
 
 print("Retrieved context (top 5):\n")
-print(context[:800], "...\n")
+for i, row in enumerate(results):
+    text = row["text"]
+    preview = text[:400] + "..." if len(text) > 400 else text
+    print(f"[{i}] {preview}\n")
 
 role = (
     "You are an aircraft design consultant. The user is designing an aircraft and seeks inspiration from historical aircraft. "
@@ -191,6 +194,7 @@ role = (
     "Recommend 2-3 specific aircraft with brief reasons why they are relevant. "
     "Format your response as markdown with a title and bullet points. "
     "Content format: <user query> | <context from vector search>"
+    "Recommend ONLY aircraft that appear in the context. Do not mention any aircraft that are not listed in the context."
 )
 
 answer = agent_run(role=role, task=f"{query} | {context}", model=MODEL)
