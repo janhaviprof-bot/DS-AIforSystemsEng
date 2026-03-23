@@ -74,7 +74,7 @@ def server(input, output, session: Session):
         return ui.TagList(
             ui.p(
                 ui.strong("We understood: "),
-                
+                f" {make} {model}".strip() or " (edit below)",
             ),
             ui.div(
                 {"class": "row g-2 mb-2"},

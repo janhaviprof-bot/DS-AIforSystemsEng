@@ -20,11 +20,19 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install rsconnect
-        run: pip install rsconnect-python
+      - name: Install rsconnect and app dependencies
+        run: |
+          pip install rsconnect-python
+          pip install -r 03_query_ai/charger_app/requirements.txt
 
       - name: Deploy to Posit Connect
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
         run: |
           rsconnect deploy shiny 03_query_ai/charger_app \
-            --server ${{ secrets.CONNECT_SERVER }} \
-            --api-key ${{ secrets.CONNECT_API_KEY }}
+            -s "$CONNECT_SERVER" \
+            -k "$CONNECT_API_KEY" \
+            -a db8e5d0b-1aaf-4392-883f-937b17db04ea \
+            --no-verify \
+            -v
