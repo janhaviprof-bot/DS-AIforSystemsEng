@@ -193,7 +193,7 @@ role = (
     "Answer the question using only the context provided (retrieved aircraft). "
     "Recommend 2-3 specific aircraft with brief reasons why they are relevant. "
     "Format your response as markdown with a title and bullet points. "
-    "Content format: <user query> | <context from vector search>"
+    "Content format: <user query> | <context from vector search>. "
     "Recommend ONLY aircraft that appear in the context. Do not mention any aircraft that are not listed in the context."
 )
 
