@@ -78,7 +78,6 @@ tool_add_two_numbers = {
 }
 
 # 3. CREATE CHAT REQUEST WITH TOOLS ###################################
-
 # Create a simple chat history with a user question that will require the tool
 messages = [
     {"role": "user", "content": "What is 3 + 2?"}
@@ -97,6 +96,7 @@ response = requests.post(CHAT_URL, json=body)
 response.raise_for_status()
 result = response.json()
 
+
 # 4. EXECUTE THE TOOL CALL ###################################
 
 # Receive back the tool call
@@ -107,7 +107,9 @@ if "tool_calls" in result.get("message", {}):
     # Execute each tool call
     for tool_call in tool_calls:
         func_name = tool_call["function"]["name"]
-        func_args = json.loads(tool_call["function"]["arguments"])
+        # Ollama may return arguments as a JSON string or an already-parsed dict
+        raw_args = tool_call["function"]["arguments"]
+        func_args = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
         
         # Get the function from globals and execute it
         func = globals().get(func_name)

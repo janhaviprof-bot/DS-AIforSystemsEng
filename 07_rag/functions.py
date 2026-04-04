@@ -83,7 +83,9 @@ def agent(messages, model=DEFAULT_MODEL, output="text", tools=None, all=False):
                 # Execute the tool function
                 # Note: Tool functions must be defined in the global scope
                 func_name = tool_call["function"]["name"]
-                func_args = json.loads(tool_call["function"]["arguments"])
+                # Ollama may return arguments as a JSON string or an already-parsed dict
+                raw_args = tool_call["function"]["arguments"]
+                func_args = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
                 
                 # Get the function from globals and execute it
                 func = globals().get(func_name)
