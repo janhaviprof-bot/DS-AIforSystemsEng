@@ -35,7 +35,7 @@ def add_two_numbers(x, y):
     return x + y
 
 # Define another function to be used as a tool
-def get_table(df):
+def get_table(df=None):
     """
     Convert a pandas DataFrame into a markdown table.
     
@@ -49,6 +49,24 @@ def get_table(df):
     str
         Markdown-formatted table string
     """
+    # Tool-call arguments arrive as JSON-ish structures; coerce them to a DataFrame.
+    # This keeps the example working even when the model passes `df` as a dict or list.
+    if df is None:
+        df = pd.DataFrame()
+    elif isinstance(df, str):
+        # Ollama sometimes passes nested JSON as a string; try to parse it.
+        try:
+            df = json.loads(df)
+        except Exception:
+            pass
+    if hasattr(df, "to_markdown"):
+        return df.to_markdown(index=False)
+    if isinstance(df, dict):
+        df = pd.DataFrame(df)
+    elif isinstance(df, list):
+        df = pd.DataFrame(df)
+    else:
+        df = pd.DataFrame([df])
     return df.to_markdown(index=False)
 
 # 2. DEFINE TOOL METADATA ###################################
@@ -84,7 +102,7 @@ tool_get_table = {
         "description": "Convert a data.frame into a markdown table",
         "parameters": {
             "type": "object",
-            "required": ["df"],
+            "required": [],
             "properties": {
                 "df": {
                     "type": "object",
@@ -104,7 +122,7 @@ messages = [
 ]
 
 resp = agent(messages=messages, model=MODEL, output="text")
-print("📝 Standard Chat Response:")
+print("Standard Chat Response:")
 print(resp)
 print()
 
@@ -116,7 +134,7 @@ messages = [
 ]
 
 resp = agent(messages=messages, model=MODEL, output="tools", tools=[tool_add_two_numbers])
-print("🔧 Tool Call #1 Result:")
+print("Tool Call #1 Result:")
 print(resp)
 print()
 
@@ -133,16 +151,22 @@ result_value = resp[0].get("output", 0) if isinstance(resp, list) else 0
 df = pd.DataFrame({"x": [result_value]})
 
 messages = [
-    {"role": "user", "content": f"Place the numeric value {result_value} into a 1x1 data.frame with column name 'x' and format as a markdown table."}
+    {
+        "role": "user",
+        "content": (
+            f"Call the tool get_table with df equal to this JSON object: {{\"x\": [{result_value}]}}. "
+            f"Return only the tool call."
+        ),
+    }
 ]
 
 resp2 = agent(messages=messages, model=MODEL, output="tools", tools=[tool_get_table])
-print("🔧 Tool Call #2 Result:")
+print("Tool Call #2 Result:")
 print(resp2)
 print()
 
 # Compare against manual approach
-print("📊 Manual Table Creation:")
+print("Manual Table Creation:")
 manual_table = df.to_markdown(index=False)
 print(manual_table)
 print()

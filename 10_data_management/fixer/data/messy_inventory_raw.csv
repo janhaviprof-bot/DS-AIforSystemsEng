@@ -1,0 +1,31 @@
+row_id,sku,qty_on_hand,last_restock,category
+1,A-100,12,2024-01-15,Electronics
+2,B-200,n/a,2024-02-01,electronics
+3,C-300,3 units,15-01-2024,ELEC
+4,D-400,-5,2024-13-40,electronics
+5,E-500,10,01/15/2024,Electronics 
+6,F-600,NA,2024-03-10,ELECTRONICS
+7,G-700,,2024-04-01,Food
+8,H-800,7,not-a-date,Food
+9,I-900,0,2024-05-20,food_service
+10,J-1000,1 1,2024-06-01,Electronics
+11,K-1101,-99999,2024-07-01,electronics
+12,L-1202,5 ea,2024-07-15,FOOD
+13,M-1303,,bad-date-here,food
+14,N-1404,0,2024-08-01,grocery
+15,O-1505,2 0,2024-08-15,elec
+16,P-1606,unknown,2024-09-01,Electronics 
+17,Q-1707,8,,food_retail
+18,R-1808,9,32/01/2024,ELEC
+19,S-1909,N/A,2024-10-01,Food service
+20,T-2020,15 pcs,not-a-date,electronics
+21,U-2121,1,2024-11-01,cafeteria
+22,V-2222,two,2024-11-15,Electronics
+23,W-2323,3,,Food
+24,X-2424,-1,2024-12-01,electronics
+25,Y-2525,6 units,2024-12-15, mixed
+26,Z-2626,,2025-01-01,ELECTRONICS
+27,AA-2727,10,01-02-2025,food_svc
+28,BB-2828,1 2 3,2025-01-15,Retail
+29,CC-2929,7,,electronics
+30,DD-3030,0,,Food

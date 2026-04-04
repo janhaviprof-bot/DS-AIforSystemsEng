@@ -1,0 +1,1 @@
+Only **`.md`** skill files belong here. The agent loads them with the **`read_skill`** tool (basename only, e.g. `disaster_situational_brief.md`, `references_section.md`). Do not put secrets in these files.

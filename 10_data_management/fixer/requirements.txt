@@ -1,0 +1,7 @@
+# Python fixer drivers (fixer_*.py) — pip install -r requirements.txt
+httpx>=0.27.0
+python-dotenv>=1.0.0
+pandas>=2.0.0
+geopandas>=0.14.0
+matplotlib>=3.8.0
+shapely>=2.0.0

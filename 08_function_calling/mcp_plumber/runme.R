@@ -1,0 +1,1 @@
+plumber::plumb('08_function_calling/mcp_plumber/plumber.R')$run(port=8000)

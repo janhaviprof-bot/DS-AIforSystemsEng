@@ -1,0 +1,82 @@
+---
+description: Elegant tidyverse R—always = not <- (arrows.mdc), native pipe, join_by, .by, vectorized dplyr, explicit library(), httr2/purrr. Globs below; see Relation to coding_style.mdc.
+alwaysApply: false
+globs:
+  - 03_query_ai/**/*.R
+  - 10_data_management/**/*.R
+  - "**/fixer/**/*.R"
+  - "*.R"
+---
+
+# Elegant tidyverse R (scoped paths)
+
+Use this rule when editing R files matched by the globs above (`03_query_ai/`, `10_data_management/`, `**/fixer/**`). For tutorial-style scripts elsewhere, prefer [.cursor/rules/coding_style.mdc](coding_style.mdc).
+
+## Style alignment
+
+- Follow the [Tidyverse style guide](https://style.tidyverse.org/) (files, syntax, functions, pipes, ggplot2). Optional tooling: [styler](https://styler.r-lib.org/), [lintr](https://lintr.r-lib.org/).
+- **Assignment:** always **`=`** for binding objects, never **`<-`**, per project [arrows.mdc](arrows.mdc) (same convention as [coding_style.mdc](coding_style.mdc)). This overrides typical tidyverse examples that use `<-`.
+- Supplementary idioms: [Modern R Development Guide (gist)](https://gist.github.com/sj-io/3828d64d0969f2a0f05297e59e6c15ad) — not a substitute for the official guide; translate any gist snippets from `<-` to **`=`**.
+
+## Package loading
+
+- **Do not** default to `library(tidyverse)` — it attaches many namespaces. Call **`library()` only for packages this file uses**; use `pkg::fn()` for one-off calls when it avoids an attach.
+- Quick map (see skill for detail): [Tidyverse packages](https://tidyverse.org/packages/) — core pieces include **dplyr**, **tidyr**, **readr**, **purrr**, **tibble**, **stringr**, **forcats**, **lubridate**, **ggplot2**. Add **httr2**, **jsonlite** for HTTP/JSON; **glue**, **reprex**, **tidymodels**, etc. only when needed.
+
+## Pipe and modern dplyr (1.1+)
+
+- Prefer **native pipe** `|>` (not `%>%`) for sequences of steps, per [Pipes](https://style.tidyverse.org/pipes.html) and the gist.
+- Joins: prefer **`join_by()`** over legacy `by = c("a" = "b")` when it fits; use **`multiple`** / **`unmatched`** deliberately for join quality control.
+- Grouping: prefer **`.by`** in **`mutate()`** / **`summarise()`** for per-operation grouping instead of `group_by() |> … |> ungroup()` when that is clearer.
+- Use **`pick()`**, **`across()`**, **`reframe()`** where they simplify multi-column or multi-row summaries.
+
+## Vectorized, data-frame–centric logic
+
+- Center work on the **tibble/data frame**: **`mutate()`**, **`filter()`**, **`summarise()`**, joins — not row-at-a-time loops unless there is a real need (e.g. I/O side effects).
+- Prefer **`dplyr::if_else()`** and **`dplyr::case_when()`** for column logic; prefer **`coalesce()`**, **`na_if()`**, **`tidyr::replace_na()`**, **`tidyr::fill()`** for missing-value patterns.
+- Use **stringr** vectorized functions inside **`mutate()`**, not per-row loops for table logic.
+- Scalar **`if` / `else`** is for **one-off control flow** (paths, config, interactive vs batch), not for recoding columns rowwise.
+- Avoid `for (i in 1:nrow(df))` + `if` to build vectors; avoid **`sapply(seq_len(nrow(df)), …)`** emulating column logic.
+
+## Programming with dplyr (rlang)
+
+- Forward user column arguments with **`{{ var }}`** into data-masking verbs.
+- Programmatic column names: **`.data[[var]]`** or **`all_of(vars)`** — not `parse()`/`eval()` or `get()` in data masks.
+
+## purrr
+
+- Prefer **`map(...) |> purrr::list_rbind()`** / **`list_cbind()`** over superseded **`map_dfr`** / **`map_dfc`**.
+- Side effects: **`walk()`** / **`walk2()`**. For robust iteration over flaky operations, **`possibly()`** / **`safely()`** (often clearer than sprawling **`tryCatch`**).
+- Prefer type-stable **`map_*`** over **`sapply`**.
+
+## httr2
+
+- Compose requests with **`request()`**, **`req_*`**, then **`req_perform()`** ([httr2](https://httr2.r-lib.org/), [Wrapping APIs](https://httr2.r-lib.org/articles/wrapping-apis.html)).
+- Use **`req_error()`** for clearer HTTP failure behavior. For many requests, consider **`req_perform_iterative(..., on_error = ...)`**.
+- Typed recovery (e.g. 404 → `NULL`): small **`rlang::try_fetch`** / targeted **`tryCatch`** on specific condition classes — not huge generic trees.
+
+## Performance (one line)
+
+- **Profile first** (**profvis**); compare alternatives with **bench::mark()** — keep readable dplyr until a hotspot is proven; see [Writing performant code with tidy tools](https://tidyverse.org/blog/2023/04/performant-packages/) and project skill **tidyverse-elegant-r**.
+
+## Python in the same repo (lightweight)
+
+- Prefer **pandas** (or **Polars**) chains / **`.assign()`** / **`groupby`** + **`transform`** over row-wise **`for`** + **`if`** forests when expressing the same table logic.
+
+## Assignment (this repository)
+
+- **Always** use **`=`** for assignment (including function definitions: `fn = function(...) { ... }`). Do **not** use **`<-`**. See [arrows.mdc](arrows.mdc).
+
+---
+
+## Relation to `coding_style.mdc`
+
+| Topic | `coding_style.mdc` (tutorial scripts) | This rule (globs above) |
+|--------|----------------------------------------|-------------------------|
+| Pipe | **`%>%`** encouraged for tidyverse | **`|>`** native pipe |
+| Comments | Frequent, educational | Still clear; avoid noise |
+| `library(tidyverse)` | Broad tidyverse preference | **Explicit `library()`** per file |
+| Row-wise logic | Some one-line `if` examples | **Vectorized** `mutate` / `case_when` / **stringr** |
+| Assignment | **`=`** | **`=`** only (never **`<-`**); [arrows.mdc](arrows.mdc) |
+
+When both rules could apply, **this rule wins for R files under the globs**; use **coding_style.mdc** for `LAB_*` / `READ_*` / `ACTIVITY_*` materials and other tutorial paths not covered here.

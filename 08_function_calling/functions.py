@@ -12,6 +12,8 @@
 import requests  # for HTTP requests
 import json      # for working with JSON
 import pandas as pd  # for data manipulation
+import sys       # for stack frame inspection
+import time      # for simple polling/retry
 
 # If you haven't already, install these packages...
 # pip install requests pandas
@@ -23,6 +25,30 @@ DEFAULT_MODEL = "smollm2:1.7b"
 PORT = 11434
 OLLAMA_HOST = f"http://localhost:{PORT}"
 CHAT_URL = f"{OLLAMA_HOST}/api/chat"
+REQUEST_TIMEOUT = 300  # seconds; avoid hanging indefinitely on network/model issues
+OLLAMA_TAGS_URL = f"{OLLAMA_HOST}/api/tags"
+
+
+def ensure_ollama_available(max_wait_seconds: int = 15, poll_interval_seconds: float = 0.5) -> None:
+    """
+    Fail fast with a helpful message if Ollama isn't reachable.
+    """
+    deadline = time.time() + max_wait_seconds
+    last_err = None
+    while time.time() < deadline:
+        try:
+            r = requests.get(OLLAMA_TAGS_URL, timeout=5)
+            if r.ok:
+                return
+        except Exception as e:
+            last_err = e
+        time.sleep(poll_interval_seconds)
+
+    raise RuntimeError(
+        "Ollama is not reachable at localhost:11434. "
+        "Start it first with: `python 08_function_calling/01_ollama.py`.\n"
+        f"Last error: {last_err}"
+    )
 
 ## 0.3 Tool implementations (agent resolves names in this module) #################################
 
@@ -60,27 +86,32 @@ def agent(messages, model=DEFAULT_MODEL, output="text", tools=None, all=False):
     
     # If the agent has NO tools, perform a standard chat
     if tools is None:
+        ensure_ollama_available()
         body = {
             "model": model,
             "messages": messages,
-            "stream": False
+            "stream": False,
+            # Token cap makes runtime more predictable for students' machines.
+            "options": {"num_predict": 500},
         }
         
-        response = requests.post(CHAT_URL, json=body)
+        response = requests.post(CHAT_URL, json=body, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()
         result = response.json()
         
         return result["message"]["content"]
     else:
         # If the agent has tools, perform a tool call
+        ensure_ollama_available()
         body = {
             "model": model,
             "messages": messages,
             "tools": tools,
-            "stream": False
+            "stream": False,
+            "options": {"num_predict": 500},
         }
         
-        response = requests.post(CHAT_URL, json=body)
+        response = requests.post(CHAT_URL, json=body, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()
         result = response.json()
         
@@ -91,15 +122,28 @@ def agent(messages, model=DEFAULT_MODEL, output="text", tools=None, all=False):
                 # Execute the tool function
                 # Note: Tool functions must be defined in the global scope
                 func_name = tool_call["function"]["name"]
-                # Ollama may return arguments as a JSON string or an already-parsed dict
-                raw_args = tool_call["function"]["arguments"]
+                raw_args = tool_call["function"].get("arguments", {})
+                # Ollama may return tool arguments either as a JSON string or as an already-parsed dict.
+                # Keep behavior consistent with the R examples (where arguments are already structured).
                 func_args = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
                 
                 # Get the function from globals and execute it
                 func = globals().get(func_name)
+                # `agent()` lives in this module, but students typically define tool functions
+                # in the *calling script* (e.g. `03_agents_with_function_calling.py`).
+                # Search up the stack to find the function in caller globals.
+                if func is None:
+                    for depth in range(1, 6):  # reasonable small bound for examples
+                        try:
+                            frame = sys._getframe(depth)
+                            func = frame.f_globals.get(func_name)
+                            if func is not None:
+                                break
+                        except ValueError:
+                            break
                 if func:
-                    output = func(**func_args)
-                    tool_call["output"] = output
+                    tool_output = func(**func_args)
+                    tool_call["output"] = tool_output
         
         if all:
             return result

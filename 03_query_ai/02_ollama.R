@@ -23,7 +23,7 @@ body <- list(
   stream = FALSE       # Non-streaming response
 )
 
-# Build and send the POST request to the LM Studio REST API
+# Build and send the POST request to the REST API
 res <- request(url) %>%
   req_body_json(body) %>%   # Attach the JSON body
   req_method("POST") %>%   # Set HTTP method

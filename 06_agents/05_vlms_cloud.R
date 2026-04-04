@@ -1,4 +1,4 @@
-#' @name 05_using_vlms.R
+#' @name 05_vlms_cloud.R
 #' @title Using Visual Language Models (VLMs) with Ollama Cloud
 #' @author Prof. Tim Fraser
 #' @description
@@ -64,7 +64,7 @@ img = IMAGE_PATH |> image_read()
 info = img |> image_info() # check image size
 info # view image info
 
-# Shrink the image to 10% of its original size
+# Shrink the image to 50% of its original size
 new_size = paste0(info$width * 0.5, "x", info$height * 0.5)
 # Scale the image to the new size
 img_small = img |> image_scale(new_size)
@@ -85,7 +85,7 @@ if (file.exists(".env")){  readRenviron(".env")  } else {  warning(".env file no
 
 ## 0.3 Configuration #################################
 
-# llava is a multimodal model that can read images AND text
+# Gemma3:4b is a multimodal model that can read images AND text
 MODEL = "gemma3:4b"
 
 # Path to the image we want the VLM to analyze

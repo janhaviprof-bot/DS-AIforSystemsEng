@@ -61,7 +61,12 @@ def get_shortages(category="Psychiatry", limit=500):
     }
     
     # Perform the request
-    response = requests.get(url, params=params, headers={"Accept": "application/json"})
+    response = requests.get(
+        url,
+        params=params,
+        headers={"Accept": "application/json"},
+        timeout=30,
+    )
     response.raise_for_status()
     
     # Parse the response as JSON
@@ -114,7 +119,7 @@ tool_get_shortages = {
             "properties": {
                 "category": {
                     "type": "string",
-                    "description": f"the therapeutic category of the drug. Options are: {', '.join(categories)}."
+                    "description": "the therapeutic category of the drug (e.g., Psychiatry)"
                 },
                 "limit": {
                     "type": "number",
@@ -131,13 +136,20 @@ tool_get_shortages = {
 
 # Agent 1: Data Fetcher (with tools)
 # This agent uses the get_shortages tool to fetch data from the API
-task = "Get data on drug shortages for the category Psychiatry"
+task = "Get data on drug shortages for the category Psychiatry with limit 10"
 role1 = "I fetch information from the FDA Drug Shortages API"
-result1 = agent_run(role=role1, task=task, model=MODEL, output="tools", tools=[tool_get_shortages])
+result1_calls = agent_run(role=role1, task=task, model=MODEL, output="tools", tools=[tool_get_shortages])
 
-# result1 will be a DataFrame (the output from get_shortages)
-# Convert it to text for the next agent
-result1_text = df_as_text(result1)
+# When output="tools", agent_run() returns a list of tool_calls.
+# The actual tool output is stored at tool_call["output"].
+result1_df = (
+    result1_calls[0].get("output")
+    if isinstance(result1_calls, list) and len(result1_calls) > 0
+    else None
+)
+
+# Convert it to text for the next agent (keep prompt small)
+result1_text = df_as_text(result1_df.head(10))
 
 # Agent 2: Data Analyst (no tools)
 # This agent analyzes the data and returns a markdown table
@@ -151,14 +163,14 @@ result3 = agent_run(role=role3, task=result2, model=MODEL, output="text", tools=
 
 # 4. VIEW RESULTS ###################################
 
-print("📊 Agent 1 Result (Data Fetch):")
-print(f"Retrieved {len(result1)} records")
-print(result1.head())
+print("Agent 1 Result (Data Fetch):")
+print(f"Retrieved {len(result1_df)} records")
+print(result1_df.head())
 print()
 
-print("📈 Agent 2 Result (Analysis):")
+print("Agent 2 Result (Analysis):")
 print(result2)
 print()
 
-print("📰 Agent 3 Result (Press Release):")
+print("Agent 3 Result (Press Release):")
 print(result3)

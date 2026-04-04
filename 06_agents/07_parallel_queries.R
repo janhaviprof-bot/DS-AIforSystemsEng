@@ -59,6 +59,7 @@ get_request = function(CONTENT, PROMPT, MODEL){
 PROMPT = paste0(
     "Your only task/role is to evaluate the sentiment of product reviews provided by the user. ",
     "Your response should simply be 'positive', 'negative', or 'other'. ",
+    "Return a JSON string of your response. ",
     "Do not include any other text in your response. ",
     "Do not include any extra formatting like  '```json' in your response. ",
     "The JSON string should have the following format: ",
@@ -72,6 +73,7 @@ MODEL = "smollm2:1.7b"
 # Do one quick test request
 resp = get_request(CONTENT = "booo", PROMPT = PROMPT, MODEL = MODEL) |>
     req_perform()
+    
 # Check the output!
 resp |> resp_body_json() |> with(message) |> with(content)
 

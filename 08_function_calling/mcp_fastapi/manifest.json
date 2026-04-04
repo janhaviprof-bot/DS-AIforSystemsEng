@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "locale": "English_United States.1252",
+  "metadata": {
+    "appmode": "python-api",
+    "entrypoint": "server:app"
+  },
+  "python": {
+    "version": "3.12.10",
+    "package_manager": {
+      "name": "pip",
+      "version": "26.0.1",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    "requirements.txt": {
+      "checksum": "1329b958addfb0c4d56a0ebe25ffd500"
+    },
+    "README.md": {
+      "checksum": "907add8ea2c147d0a3098e669634a387"
+    },
+    "deployme.py": {
+      "checksum": "e678769c7ae00036e1487c40ec271224"
+    },
+    "runme.py": {
+      "checksum": "cbe6ebbac418edb033acafb657bc57ee"
+    },
+    "server.py": {
+      "checksum": "9c950e2e07ab6f0f1e72904979ff059b"
+    },
+    "testme.py": {
+      "checksum": "168b21c5b16ba0b4fab3156cd1a939ce"
+    }
+  }
+}

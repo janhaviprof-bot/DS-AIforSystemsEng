@@ -1,6 +1,6 @@
 ![Banner Image](../docs/images/icons.png)
 
-# README '/function_calling'
+# README `08_function_calling`
 
 > Learn how to use function calling with LLMs to enable agents to interact with external tools and APIs. Build multi-agent systems where agents can call functions to fetch data, perform calculations, and process information.
 
@@ -8,9 +8,10 @@
 
 ## Table of Contents
 
-- [Activities](#activities)
-- [Lab Exercise](#lab-exercise)
-- [Readings](#readings)
+- [README `08_function_calling`](#readme-08_function_calling)
+  - [Table of Contents](#table-of-contents)
+  - [Activities](#activities)
+  - [Readings](#readings)
 
 ---
 
@@ -29,6 +30,9 @@ Complete these activities in order:
 3. [LAB: Multi-Agent System with Tools](LAB_multi_agent_with_tools.md)
    - [`04_multiple_agents_with_function_calling.py`](04_multiple_agents_with_function_calling.py) — Multi-agent workflow (Python)
    - [`04_multiple_agents_with_function_calling.R`](04_multiple_agents_with_function_calling.R) — Multi-agent workflow (R)
+4. [ACTIVITY: Build and Deploy an MCP Server](ACTIVITY_mcp_server.md)
+   - [`mcp_plumber/`](mcp_plumber/) — MCP over HTTP with **Plumber** (R); see [mcp_plumber/README.md](mcp_plumber/README.md)
+   - [`mcp_fastapi/`](mcp_fastapi/) — same protocol with **FastAPI** (Python); see [mcp_fastapi/README.md](mcp_fastapi/README.md)
 
 ---
 
