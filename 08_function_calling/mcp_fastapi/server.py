@@ -42,7 +42,28 @@ TOOLS = [
             },
             "required": ["dataset_name"],
         },
-    }
+    },
+    {
+        "name": "preview_dataset_table",
+        "description": (
+            "Returns the first rows of a dataset as a GitHub-flavored markdown table "
+            "(pipe-separated columns), suitable to read or display as a table."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "dataset_name": {
+                    "type": "string",
+                    "description": "Dataset to preview. Options: 'mtcars' or 'iris'.",
+                },
+                "n_rows": {
+                    "type": "integer",
+                    "description": "Number of rows to include (default 10, max 50).",
+                },
+            },
+            "required": ["dataset_name"],
+        },
+    },
 ]
 
 # ── Tool logic (same datasets as R: mtcars, iris via Rdatasets CSV) ──
@@ -52,6 +73,19 @@ _DATASET_URLS = {
     "iris": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/iris.csv",
 }
 DATASETS = {name: pd.read_csv(url) for name, url in _DATASET_URLS.items()}
+
+
+def _df_to_markdown(df: pd.DataFrame) -> str:
+    """GitHub-flavored markdown table without the optional tabulate dependency."""
+    view = df.fillna("")
+    cols = [str(c) for c in view.columns]
+    header = "| " + " | ".join(cols) + " |"
+    sep = "| " + " | ".join(["---"] * len(cols)) + " |"
+    lines = [header, sep]
+    for _, row in view.iterrows():
+        cells = [str(row[c]) for c in view.columns]
+        lines.append("| " + " | ".join(cells) + " |")
+    return "\n".join(lines)
 
 
 def run_tool(name: str, args: dict) -> str:
@@ -65,6 +99,21 @@ def run_tool(name: str, args: dict) -> str:
         summary.index.name = "variable"
         summary.columns = ["mean", "sd", "min", "max"]
         return summary.reset_index().to_json(orient="records", indent=2)
+
+    if name == "preview_dataset_table":
+        nm = args.get("dataset_name")
+        if nm not in DATASETS:
+            raise ValueError(f"Unknown dataset: '{nm}' — choose 'mtcars' or 'iris'")
+
+        n = args.get("n_rows", 10)
+        try:
+            n = int(n)
+        except (TypeError, ValueError):
+            n = 10
+        n = max(1, min(n, 50))
+
+        chunk = DATASETS[nm].head(n)
+        return _df_to_markdown(chunk)
 
     raise ValueError(f"Unknown tool: {name}")
 

@@ -45,9 +45,9 @@ load_dotenv()
 # 0.4 Set the server URL #################################
 # Set the server URL
 # You can use your local API (if you execut runme.py)
-# SERVER = "http://127.0.0.1:8000/mcp"
+SERVER = "http://127.0.0.1:8000/mcp"
 # Or you can use my deployed API (or update to yours), assuming you provide a Posit Connect viewer API key.
-SERVER = "https://connect.systems-apps.com/fastapimcp/mcp"
+#SERVER = "https://connect.systems-apps.com/fastapimcp/mcp"
 
 # ── Helper: send one JSON-RPC request ───────────────────────
 
@@ -89,6 +89,14 @@ result = mcp_request("tools/call", {
 })
 
 print(result["content"][0]["text"])
+
+# 3b. SECOND TOOL — tabular preview (markdown table) #####
+print("# 3b. SECOND TOOL — preview_dataset_table ################")
+result_table = mcp_request("tools/call", {
+    "name":      "preview_dataset_table",
+    "arguments": {"dataset_name": "mtcars", "n_rows": 5},
+})
+print(result_table["content"][0]["text"])
 
 
 # 4. CONNECT AN LLM TO THE MCP SERVER ####################
@@ -148,7 +156,14 @@ if not ollama_is_running():
 else:
     ## 4c. Ask the LLM a question that requires the tool -----
     print("# 4c. ASK THE LLM A QUESTION THAT REQUIRES THE TOOL ####################")
-    messages = [{"role": "user", "content": "Give me a summary of the mtcars dataset."}]
+    messages = [{
+    "role": "user",
+    "content": (
+        "Use the available tools. Show the first 5 rows of the mtcars dataset "
+        "as a markdown table (not numeric summary statistics). "
+        "Call preview_dataset_table with dataset_name mtcars and n_rows 5."
+    ),
+}]
 
     body = {"model": MODEL, "messages": messages, "tools": ollama_tools, "stream": False}
     resp = requests.post(CHAT_URL, json=body)
