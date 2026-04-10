@@ -108,8 +108,12 @@ print("📋 T-Test Results:")
 print(t_test_result)
 print()
 
-# Extract p-value
-p_value = t_test_result['p-val'].values[0]
+# Extract p-value (pingouin 0.6+: p_val; older releases: p-val)
+p_value = (
+    t_test_result["p_val"].values[0]
+    if "p_val" in t_test_result.columns
+    else t_test_result["p-val"].values[0]
+)
 
 # Interpret the result
 print("💡 Interpretation:")
@@ -143,9 +147,13 @@ print("\n📋 ANOVA Results:")
 print(anova_result)
 print()
 
-# Extract F-statistic and p-value
-f_statistic = anova_result['F'].values[0]
-p_value = anova_result['p-unc'].values[0]
+# Extract F-statistic and p-value (pingouin 0.6+: p_unc; older: p-unc)
+f_statistic = anova_result["F"].values[0]
+p_value = (
+    anova_result["p_unc"].values[0]
+    if "p_unc" in anova_result.columns
+    else anova_result["p-unc"].values[0]
+)
 
 print(f"📊 F-statistic: {f_statistic:.4f}")
 print(f"📊 p-value: {p_value:.4f}\n")
