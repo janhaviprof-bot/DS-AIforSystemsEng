@@ -24,7 +24,7 @@ from dotenv import load_dotenv  # for loading .env file
 ## 0.2 Configuration #################################
 
 # Choose your AI provider: "ollama" or "openai"
-AI_PROVIDER = "ollama"  # Change to "openai" if using OpenAI
+AI_PROVIDER = "openai"  # Change to "openai" if using OpenAI
 
 # Ollama configuration
 PORT = 11434
@@ -82,19 +82,19 @@ def create_quality_control_prompt(report_text, source_data=None):
   
 Quality Control Criteria:
 
-1. **accurate** (boolean): Verify that no part of the paragraph misinterprets the data supplied. Return TRUE if no misinterpretation. FALSE if any problems.
+1. **accurate** (boolean): Are there any factual errors or unsupported interpretations relative to the Source Data section?.Verify that no part of the paragraph misinterprets the data supplied. Return TRUE if no misinterpretation. FALSE if any problems.
 
-2. **accuracy** (1-5 Likert scale): Rank the paragraph on a 5-point Likert scale, where 1 = many problems interpreting the Data vs. 5 = no misinterpretation of the Data.
+2. **accuracy** (1-5 Likert scale): How severe are the problems interpreting the Data? Rank the paragraph on a 5-point Likert scale, where 1 = many problems interpreting the Data vs. 5 = no misinterpretation of the Data. If accurate == TRUE, accuracy should be greater than equal to 3. If accurate == FALSE, accuracy should be less than equal to 3.
 
-3. **formality** (1-5 Likert scale): Rank the paragraph on a 5-point Likert scale, where 1 = casual writing vs. 5 = government report writing.
+3. **formality** (1-5 Likert scale): How formal is the tone of the paragraph? Rank the paragraph on a 5-point Likert scale, where 1 = casual writing vs. 5 = government report writing.
 
-4. **faithfulness** (1-5 Likert scale): Rank the paragraph on a 5-point Likert scale, where 1 = makes grandiose claims not supported by the data vs. 5 = makes claims directly related to the data.
+4. **faithfulness** (1-5 Likert scale): Are claims related to what the data says? Rank the paragraph on a 5-point Likert scale, where 1 = makes grandiose claims not supported by the data vs. 5 = makes claims directly related to the data.
 
-5. **clarity** (1-5 Likert scale): Rank the paragraph on a 5-point Likert scale, where 1 = confusing writing style vs. 5 = clear and precise.
+5. **clarity** (1-5 Likert scale): Is the writing easy to understand? Rank the paragraph on a 5-point Likert scale, where 1 = confusing writing style vs. 5 = clear and precise.
 
-6. **succinctness** (1-5 Likert scale): Rank the paragraph on a 5-point Likert scale, where 1 = unnecessarily wordy vs. 5 = succinct.
+6. **succinctness** (1-5 Likert scale): Is the text too wordy? Rank the paragraph on a 5-point Likert scale, where 1 = unnecessarily wordy vs. 5 = succinct.
 
-7. **relevance** (1-5 Likert scale): Rank the paragraph on a 5-point Likert scale, where 1 = irrelevant commentary vs. 5 = relevant commentary about the data.
+7. **relevance** (1-5 Likert scale): Is the content on topic for the task without any irrelevant commentary? Rank the paragraph on a 5-point Likert scale, where 1 = irrelevant commentary vs. 5 = relevant commentary about the data.
 
 Return your response as valid JSON in this exact format:
 {
