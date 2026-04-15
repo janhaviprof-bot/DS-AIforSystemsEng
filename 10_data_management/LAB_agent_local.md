@@ -24,10 +24,12 @@ Endpoints are the same: **`GET /health`**, **`POST /hooks/agent`**, **`POST /hoo
 ### 🧱 Stage 1: Environment
 
 - [ ] **Choose Python or R** (one track for this activity).
+  - [ ] **Python:** In a virtual environment, from **`agentpy/`**, run **`pip install -r requirements.txt`**.
+  - [ ] **R:** Install CRAN packages **`plumber`**, **`jsonlite`**, **`httr2`**, **`reticulate`**; configure a Python environment with **`crewai_tools`** (see **[`agentr/README.md`](agentr/README.md)** — **`requirements.txt`** and **`RETICULATE_PYTHON`**).
 - [ ] Copy **[`agentpy/.env.example`](agentpy/.env.example)** or **[`agentr/.env.example`](agentr/.env.example)** to **`.env`** inside that same folder (**`agentpy/`** or **`agentr/`**) and add your **`OLLAMA_API_KEY`** from [ollama.com](https://ollama.com) (keep **`.env`** gitignored).
 - [ ] Confirm **`OLLAMA_HOST`** and **`OLLAMA_MODEL`** match the course default (**`nemotron-3-nano:30b-cloud`**) unless your instructor says otherwise.
-- [ ] **Python:** In a virtual environment, from **`agentpy/`**, run **`pip install -r requirements.txt`**.
-- [ ] **R:** Install CRAN packages **`plumber`**, **`jsonlite`**, **`httr2`**, **`reticulate`**; configure a Python environment with **`crewai_tools`** (see **[`agentr/README.md`](agentr/README.md)** — **`requirements.txt`** and **`RETICULATE_PYTHON`**).
+- [ ] Register for a **`Serper.dev` API Key**! This agent uses the `SerperDevTool` tool from the **`crewai_tools`** library, which lets it search the internet! Signup for an account at [serper.dev/signup](https://serper.dev/signup), create an API key, and add it to your `.env` file as `SERPER_API_KEY`.
+  - <img width="1548" height="990" alt="image" src="https://github.com/user-attachments/assets/fd784ff8-2354-4373-b65d-2c7fa59393dd" />
 
 ### 🧱 Stage 2: Start the API
 
