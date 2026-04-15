@@ -41,8 +41,8 @@ Same idea as [`08_function_calling/mcp_fastapi/`](../../08_function_calling/mcp_
 |--------|----------------|
 | [`runme.sh`](runme.sh) | `cd` to this folder and run **`python -m uvicorn app.api:app`** on port **8000** |
 | [`testme.py`](testme.py) | After deploy: **`GET /health`** and **`POST /hooks/agent`** against **`AGENT_PUBLIC_URL`** in **`.env`** |
-| [`manifestme.sh`](manifestme.sh) | **`rsconnect write-manifest api`** with **`--entrypoint app.api:app`** |
-| [`deployme.sh`](deployme.sh) | **`rsconnect deploy api`** using **`CONNECT_SERVER`** and **`CONNECT_API_KEY`** from **`.env`** |
+| [`manifestme.sh`](manifestme.sh) | **`rsconnect write-manifest fastapi`** with **`--entrypoint app.api:app`** |
+| [`deployme.sh`](deployme.sh) | **`rsconnect deploy fastapi`** using **`CONNECT_SERVER`** and **`CONNECT_API_KEY`** from **`.env`** |
 
 On macOS/Linux, make the shell scripts executable once: `chmod +x *.sh`.
 

@@ -22,7 +22,7 @@ pip install -q rsconnect-python
 
 TITLE="${CONNECT_TITLE:-course-autonomous-agent}"
 
-rsconnect deploy api \
+rsconnect deploy fastapi \
   --title "$TITLE" \
   --server "$CONNECT_SERVER" \
   --api-key "$CONNECT_API_KEY" \

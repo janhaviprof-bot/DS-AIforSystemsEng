@@ -1,6 +1,6 @@
 # 📌 ACTIVITY
 
-## Enrich Zoning and POI Data with an LLM (R or Python + Ollama Cloud)
+## Run a Spatial Data Fixer Agent
 
 🕒 *Estimated Time: 10–15 minutes*
 

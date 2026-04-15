@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import Annotated, Any, Literal
 
 from dotenv import load_dotenv
-from fastapi import Body, FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -54,7 +54,7 @@ unless you send a new task in a resume flow.
 ### Intended deployment
 
 - Primary target is **Posit Connect** as a **FastAPI** content item. 
-- Deploy with **`app.api:app`** (see the module’s `manifestme.sh` / `deployme.sh` and `rsconnect deploy api` workflow).
+- Deploy with **`app.api:app`** (see the module’s `manifestme.sh` / `deployme.sh` and `rsconnect deploy fastapi` workflow).
 - Environment variables such as `OLLAMA_API_KEY`, optional `SERPER_API_KEY`, and Connect server settings are set on the Connect host.
 
 """.strip()
@@ -83,9 +83,10 @@ app.state.run_enabled = True  # toggled via /hooks/control (single-worker demos)
 
 
 @app.get("/", include_in_schema=False)
-def root_redirect() -> RedirectResponse:
-    """Send browsers from the app root to the interactive OpenAPI UI."""
-    return RedirectResponse(url="/docs", status_code=307)
+def root_redirect(request: Request) -> RedirectResponse:
+    """Send browsers to docs while preserving proxy/root path prefixes."""
+    docs_url = request.url_for("swagger_ui_html")
+    return RedirectResponse(url=str(docs_url), status_code=307)
 
 
 @dataclass

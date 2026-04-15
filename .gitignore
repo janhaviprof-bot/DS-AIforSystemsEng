@@ -22,3 +22,7 @@ node_modules/
 !10_data_management/agentr/logs/.gitkeep
 10_data_management/fixer/.env
 z/
+10_data_management/agentpy/rsconnect-python/
+10_data_management/agentr/rsconnect/
+10_data_management/agentpy/rsconnect-python/agentpy.json
+10_data_management/agentr/rsconnect/agentr.json

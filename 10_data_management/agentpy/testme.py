@@ -7,7 +7,7 @@
 #
 # Deploy workflow (see also README, manifestme.sh, deployme.sh):
 #   pip install rsconnect-python
-#   ./manifestme.sh   # uses --entrypoint app.api:app
+#   ./manifestme.sh   # uses rsconnect write-manifest fastapi --entrypoint app.api:app
 #   ./deployme.sh
 #
 # On Connect, set at least: OLLAMA_API_KEY, OLLAMA_HOST, OLLAMA_MODEL.
@@ -19,6 +19,20 @@ import sys
 
 import requests
 from dotenv import load_dotenv
+
+
+def print_response(label: str, response: requests.Response) -> None:
+    """Print JSON when available; otherwise print a text preview."""
+    content_type = response.headers.get("Content-Type", "")
+    print(f"{label}:", response.status_code)
+    try:
+        print(response.json())
+    except ValueError:
+        text_preview = response.text[:500].strip()
+        print(
+            f"(non-JSON response, content-type={content_type or 'unknown'}) "
+            f"{text_preview}"
+        )
 
 
 def main() -> None:
@@ -34,13 +48,29 @@ def main() -> None:
             file=sys.stderr,
         )
         sys.exit(1)
+    # If testing locally instead of a deployed URL, set:
+    # base = "http://localhost:8000"
+    # If testing the instructor deployment, set:
+    # base = "https://connect.systems-apps.com/autonomous_agent"
 
     headers = {"Content-Type": "application/json"}
+    connect_viewer_key = os.getenv("CONNECT_VIEWER_KEY", "").strip()
+    # If CONNECT_VIEWER_KEY is set in .env, include Bearer auth automatically.
+    # Keep this for secured deployments (common on Connect); unset for public endpoints.
+    if connect_viewer_key:
+        headers["Authorization"] = f"Bearer {connect_viewer_key}"
 
     print(f"# Smoke test at {base}\n")
 
-    r = requests.get(f"{base}/health", timeout=30)
-    print("health:", r.status_code, r.json())
+    # If /health is also protected in your deployment, keep `headers=headers`.
+    # If /health is public, you can remove `headers=headers` from this call.
+    r = requests.get(f"{base}/health", headers=headers, timeout=30)
+    print_response("health", r)
+    if r.status_code in {401, 403}:
+        print(
+            "Hint: endpoint requires auth. Add CONNECT_VIEWER_KEY to .env "
+            "or use a public/local AGENT_PUBLIC_URL."
+        )
 
     r2 = requests.post(
         f"{base}/hooks/agent",
@@ -53,7 +83,7 @@ def main() -> None:
         },
         timeout=120,
     )
-    print("agent:", r2.status_code, r2.text[:500])
+    print_response("agent", r2)
 
 
 if __name__ == "__main__":

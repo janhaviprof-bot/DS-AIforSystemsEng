@@ -1,0 +1,283 @@
+python fixer_csv.py
+>> C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer>
+
+=================================================================
+📋 fixer_csv.py — batched tool calls + ThreadPoolExecutor (Ollama Cloud)
+=================================================================
+
+📦 Loading Python packages (pandas, httpx, dotenv) ...
+   ✅ Packages ready.
+
+📁 Resolving fixer folder and paths ...
+   📍 FIXER_ROOT: C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer
+   📄 Raw data:     C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\data\messy_inventory_raw.csv    
+   💾 Working copy: C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\messy_inventory_working.csv
+   📝 Audit log:    C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\fix_audit.jsonl
+
+🔐 Loading .env ...
+   ✅ .env read from fixer folder.
+
+☁️  Ollama: host = https://ollama.com
+   model  = nemotron-3-nano:30b-cloud
+   API key (masked): d002...x
+
+📊 ROWS_PER_BATCH = 10 (env ROWS_PER_BATCH)
+📊 FIXER_CHUNK_WORKERS = 1 (env FIXER_CHUNK_WORKERS)
+
+🔌 Importing fixer/functions.py ...
+   ✅ Helpers loaded.
+
+🧰 Initializing tool_state + tool definitions ...
+   ✅ Tool helpers ready.
+
+-----------------------------------------------------------------
+📂 Step 1 — Prepare files and load working copy
+-----------------------------------------------------------------
+
+📁 Ensuring output/ exists ...
+   ✅ output/ OK.
+
+📥 Copying raw CSV ➡️ working copy ...
+   ✅ Copied.
+
+📊 Reading working CSV (all columns as character) ...
+   ✅ Loaded 30 rows × 5 cols.
+🔍 Preview:
+  row_id    sku qty_on_hand last_restock     category
+0      1  A-100          12   2024-01-15  Electronics
+1      2  B-200         n/a   2024-02-01  electronics
+2      3  C-300     3 units   15-01-2024         ELEC
+🗑️  Resetting audit log ...
+   ✅ Audit log fresh.
+
+✂️  Split into 3 chunk(s) of up to 10 rows.
+
+-----------------------------------------------------------------
+🔄 Step 2 — Ollama /api/chat per chunk (workers = 1)
+-----------------------------------------------------------------
+
+
+
+-----------------------------------------------------------------
+🔧 Step 3 — Execute tool calls on main process (chunk order)
+-----------------------------------------------------------------
+
+
+   📦 Chunk 1: 9 tool call(s)
+      ✏️  set_cell row_id=2 col=qty_on_hand
+      ✏️  set_cell row_id=3 col=last_restock
+      ✏️  set_cell row_id=3 col=category
+      ✏️  set_cell row_id=5 col=last_restock
+      ✏️  set_cell row_id=6 col=category
+      ✏️  set_cell row_id=9 col=category
+      ✏️  set_cell row_id=5 col=qty_on_hand
+      ✏️  set_cell row_id=4 col=qty_on_hand
+      ✏️  set_cell row_id=8 col=last_restock
+   📦 Chunk 2: 17 tool call(s)
+      ✏️  set_cell row_id=11 col=qty_on_hand
+      ✏️  set_cell row_id=14 col=qty_on_hand
+      ✏️  set_cell row_id=16 col=qty_on_hand
+      ✏️  set_cell row_id=19 col=qty_on_hand
+      ✏️  set_cell row_id=13 col=last_restock
+      ✏️  set_cell row_id=18 col=last_restock
+      ✏️  set_cell row_id=19 col=category
+      ✏️  set_cell row_id=12 col=category
+      ✏️  set_cell row_id=15 col=category
+      ✏️  set_cell row_id=17 col=category
+      ✏️  set_cell row_id=14 col=last_restock
+      ✏️  set_cell row_id=16 col=category
+      ✏️  set_cell row_id=16 col=last_restock
+      ✏️  set_cell row_id=18 col=last_restock
+      ✏️  set_cell row_id=19 col=category
+      ✏️  set_cell row_id=20 col=category
+      ✏️  set_cell row_id=20 col=qty_on_hand
+   📦 Chunk 3: 10 tool call(s)
+      ✏️  set_cell row_id=21 col=category
+      ✏️  set_cell row_id=22 col=qty_on_hand
+      ✏️  set_cell row_id=24 col=qty_on_hand
+      ✏️  set_cell row_id=28 col=qty_on_hand
+      ✏️  set_cell row_id=25 col=category
+      ✏️  set_cell row_id=28 col=category
+      ✏️  set_cell row_id=27 col=last_restock
+      ✏️  set_cell row_id=28 col=category
+      ✏️  set_cell row_id=30 col=category
+      ✏️  set_cell row_id=30 col=qty_on_hand
+
+-----------------------------------------------------------------
+💾 Step 4 — Writing final working table
+-----------------------------------------------------------------
+   ✅ Saved 30 rows ➡️ C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\messy_inventory_workinng.csv
+
+=================================================================
+📊 Summary
+=================================================================
+📦 Chunks (API calls):     3
+🔧 Tool calls executed:   36
+✏️  Audit lines (set_cell): 28
+👷 Chunk workers used:    1
+💾 Working file:          C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\messy_inventory_working.csv
+📝 Audit log:             C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\fix_audit.jsonl    
+=================================================================
+PS C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer> python fixer_pois.py
+
+=================================================================
+📍 fixer_pois.py — batched POI category tools + points (Ollama Cloud)
+=================================================================
+
+📦 Loading Python packages (pandas, geopandas, matplotlib, httpx, dotenv) ...
+   ✅ Packages ready.
+
+📁 Resolving fixer folder and paths ...
+   📍 FIXER_ROOT: C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer
+   📄 POIs:   C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\data\pois_messy_raw.csv
+   💾 Output: C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\pois_enriched.csv
+
+🔐 Loading .env ...
+   ✅ .env read from fixer folder.
+
+☁️  Ollama: host = https://ollama.com
+   model  = nemotron-3-nano:30b-cloud
+
+📊 ROWS_PER_BATCH = 10
+📊 FIXER_CHUNK_WORKERS = 1
+
+🔌 Importing fixer/functions.py ...
+   ✅ Helpers loaded.
+
+-----------------------------------------------------------------
+📂 Step 1 — Load POIs (points)
+-----------------------------------------------------------------
+
+   ✅ 24 POIs × 8 cols.
+
+✂️  Split into 3 chunk(s) of up to 10 rows.
+
+-----------------------------------------------------------------
+🔄 Step 2 — Ollama /api/chat per chunk (ThreadPoolExecutor)
+-----------------------------------------------------------------
+
+
+-----------------------------------------------------------------
+🔧 Step 3 — Apply tool calls (chunk order)
+-----------------------------------------------------------------
+
+
+   📦 Chunk 1: 10 tool call(s)
+      ✏️  record_poi_category poi_id=1
+      ✏️  record_poi_category poi_id=2
+      ✏️  record_poi_category poi_id=3
+      ✏️  record_poi_category poi_id=4
+      ✏️  record_poi_category poi_id=5
+      ✏️  record_poi_category poi_id=6
+      ✏️  record_poi_category poi_id=7
+      ✏️  record_poi_category poi_id=8
+      ✏️  record_poi_category poi_id=9
+      ✏️  record_poi_category poi_id=10
+   📦 Chunk 2: 5 tool call(s)
+      ✏️  record_poi_category poi_id=16
+      ✏️  record_poi_category poi_id=17
+      ✏️  record_poi_category poi_id=18
+      ✏️  record_poi_category poi_id=19
+      ✏️  record_poi_category poi_id=20
+   📦 Chunk 3: 4 tool call(s)
+      ✏️  record_poi_category poi_id=21
+      ✏️  record_poi_category poi_id=22
+      ✏️  record_poi_category poi_id=23
+      ✏️  record_poi_category poi_id=24
+
+   ✅ Wrote C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\pois_enriched.csv
+
+
+-----------------------------------------------------------------
+🎨 Step 4 — Maps (geopandas + matplotlib points)
+-----------------------------------------------------------------
+
+   💾 C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\map_pois_before.png
+   💾 C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\map_pois_after.png
+
+=================================================================
+📊 Summary (fixer_pois.py)
+=================================================================
+📦 Chunks: 3 | tool calls: 19 | audit lines: 19
+⚠️  Rows error_flag TRUE: 5 / 24
+=================================================================
+PS C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer> python fixer_spatial_context.py
+
+=================================================================
+🧭 fixer_spatial_context.py — contextual tool routing + geopandas
+=================================================================
+
+📦 Loading Python packages (pandas, geopandas, matplotlib, httpx, dotenv) ...
+   ✅ Packages ready.
+
+📁 Resolving fixer folder and paths ...
+   📍 FIXER_ROOT: C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer
+   📄 Parcels: C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\parcels_enriched.csv
+   📄 POIs:    C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\pois_enriched.csv
+   💾 Output:  C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\parcels_context_enriched.csv  
+
+🔐 Loading .env ...
+   ✅ .env read from fixer folder.
+
+☁️  Ollama: host = https://ollama.com
+   model  = nemotron-3-nano:30b-cloud
+
+📊 ROWS_PER_BATCH = 10 (env ROWS_PER_BATCH)
+📊 FIXER_CHUNK_WORKERS = 1 (env FIXER_CHUNK_WORKERS)
+
+🔌 Importing fixer/functions.py ...
+   ✅ Helpers loaded.
+
+-----------------------------------------------------------------
+📂 Step 1 — Load parcels, POIs, build sf (metric CRS for ops)
+-----------------------------------------------------------------
+
+   ✅ Parcels: 8 | POIs: 24
+   🗺️  Ops CRS: EPSG:32617 (buffers / distances in meters)
+
+✂️  Split into 1 chunk(s) of up to 10 rows.
+
+-----------------------------------------------------------------
+🔄 Step 2 — Ollama /api/chat per chunk (ThreadPoolExecutor)
+-----------------------------------------------------------------
+
+
+-----------------------------------------------------------------
+🔧 Step 3 — Execute spatial tools (chunk order)
+-----------------------------------------------------------------
+
+
+   📦 Chunk 1: 15 tool call(s)
+      🎯 nearest_poi parcel_id=P01 cat=transport
+      🎯 nearest_poi parcel_id=P02 cat=retail
+      🎯 nearest_poi parcel_id=P02 cat=transport
+      🎯 nearest_poi parcel_id=P03 cat=transport
+      🎯 nearest_poi parcel_id=P03 cat=healthcare
+      🎯 nearest_poi parcel_id=P04 cat=transport
+      🎯 nearest_poi parcel_id=P04 cat=retail
+      🎯 nearest_poi parcel_id=P04 cat=food_retail
+      🎯 nearest_poi parcel_id=P05 cat=transport
+      🎯 nearest_poi parcel_id=P06 cat=recreation
+      🎯 nearest_poi parcel_id=P06 cat=parking
+      🎯 nearest_poi parcel_id=P07 cat=retail
+      🎯 nearest_poi parcel_id=P07 cat=transport
+      🎯 nearest_poi parcel_id=P08 cat=transport
+      🎯 nearest_poi parcel_id=P08 cat=healthcare
+
+   ✅ Wrote C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\parcels_context_enriched.csv     
+
+
+-----------------------------------------------------------------
+🎨 Step 4 — Map (nearest transport, meters)
+-----------------------------------------------------------------
+
+   💾 C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer\output\map_parcels_context_transport.png
+
+
+=================================================================
+📊 Summary (fixer_spatial_context.py)
+=================================================================
+📦 Chunks: 1 | tool calls: 15 | audit lines: 15
+⚠️  Rows error_flag TRUE: 0 / 8
+=================================================================
+PS C:\Users\tmf77\courses\SYSEN5381\dsai\10_data_management\fixer> 

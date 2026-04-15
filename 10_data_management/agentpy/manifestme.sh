@@ -9,4 +9,4 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 
 pip install -q rsconnect-python
-rsconnect write-manifest api --entrypoint app.api:app --overwrite .
+rsconnect write-manifest fastapi --entrypoint app.api:app --overwrite .
