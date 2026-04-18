@@ -26,3 +26,18 @@
 2026-04-15 10:38:27,955 INFO [agent] turn 2/6 calling Ollama model=nemotron-3-nano:30b-cloud
 2026-04-15 10:38:31,227 INFO [agent] turn 2 assistant text_len=2795 end_brief=True preview=## Question restatement  - **Disaster name / event:** Nevada earthquake near Carson City   - **Geographic focus:** Rural Nevada/East of Carson City, with som...
 2026-04-15 10:38:31,228 INFO [agent] loop finished ok turns_used=2
+2026-04-18 17:13:00,598 INFO [agent] loop start task_preview=Your disaster snapshot or follow-up (incident name, area, time window if relevant) turns_budget=10 min_done=2 prefetch=True forced_read_skill=True search_slots_left=2 skill_slots_left=7
+2026-04-18 17:13:01,366 INFO [agent] turn 1/10 calling Ollama model=nemotron-3-nano:30b-cloud
+2026-04-18 17:13:05,379 INFO [agent] turn 1 assistant text_len=2379 end_brief=True preview=## Question restatement You asked for a snapshot of the **ongoing disaster** you are currently following, to be used as a **morning situational brief**. You ...
+2026-04-18 17:13:05,380 INFO [agent] turn 1 END_BRIEF before min_done (2); injecting verification nudge
+2026-04-18 17:13:05,380 INFO [agent] turn 2/10 calling Ollama model=nemotron-3-nano:30b-cloud
+2026-04-18 17:13:06,182 INFO [agent] turn 2 assistant tool_calls count=1
+2026-04-18 17:13:06,184 INFO [agent] turn 2 tool web_search args={"query": "Disaster snapshot incident name location current phase response recovery status overview"}
+2026-04-18 17:13:08,034 INFO [agent] turn 2 tool web_search result_len=3995 preview=### Retrieved URLs for References  _Every URL below is safe to cite. Copy each **URL** exactly into your `## Referenc...
+2026-04-18 17:13:08,034 INFO [agent] turn 3/10 calling Ollama model=nemotron-3-nano:30b-cloud
+2026-04-18 17:13:09,046 INFO [agent] turn 3 assistant tool_calls count=1
+2026-04-18 17:13:09,046 INFO [agent] turn 3 tool web_search args={"query": "current disaster response phase ongoing incident snapshot timeline effects"}
+2026-04-18 17:13:10,833 INFO [agent] turn 3 tool web_search result_len=3995 preview=### Retrieved URLs for References  _Every URL below is safe to cite. Copy each **URL** exactly into your `## Referenc...
+2026-04-18 17:13:10,833 INFO [agent] turn 4/10 calling Ollama model=nemotron-3-nano:30b-cloud
+2026-04-18 17:13:13,900 INFO [agent] turn 4 assistant text_len=2650 end_brief=True preview=## Question restatement You asked for a snapshot of the **ongoing disaster** you are tracking, to be used as a **morning situational brief**. You want an ove...
+2026-04-18 17:13:13,900 INFO [agent] loop finished ok turns_used=4

@@ -6,11 +6,16 @@
     "entrypoint": "app.api:app"
   },
   "python": {
-    "version": "3.12.10",
+    "version": "3.14.2",
     "package_manager": {
       "name": "pip",
-      "version": "26.0.1",
+      "version": "25.3",
       "package_file": "requirements.txt"
+    }
+  },
+  "environment": {
+    "python": {
+      "requires": "~=3.12.0"
     }
   },
   "files": {
@@ -18,43 +23,49 @@
       "checksum": "9b088d20665a7b613166df1092fcbeaf"
     },
     ".env": {
-      "checksum": "1f11094881dc637ec9898edd0c73d771"
+      "checksum": "772bbf3646b4739d4889825fad6863fd"
     },
     ".env.example": {
-      "checksum": "f148855315048019f3893865cccd387d"
+      "checksum": "bf2f9ca17197b7bf8da2fc9a1bde2af4"
+    },
+    ".python-version": {
+      "checksum": "0885a8b0e7355de614d6685033e058f6"
+    },
+    "26.0.1": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "AGENT.md": {
       "checksum": "73eaddcedc1e792bfe0f5be5adb5eb22"
     },
     "README.md": {
-      "checksum": "a1a61508f984165241f664edb12c46e5"
+      "checksum": "589e1fd839f69cdedc00d34e39985cfb"
     },
     "app/__init__.py": {
       "checksum": "d6bda277500d117c59469244f535ba80"
     },
     "app/__pycache__/__init__.cpython-312.pyc": {
-      "checksum": "c56287fb513e2d9c96c0ac66ec9abc82"
+      "checksum": "760f8fdeeb59f1739ba459e525089cda"
     },
     "app/__pycache__/api.cpython-312.pyc": {
-      "checksum": "5a5692d0f68ec8c9d745fef0f521bfb8"
+      "checksum": "a1454008ab071e993ae9e511798e1a43"
     },
     "app/__pycache__/context.cpython-312.pyc": {
-      "checksum": "2d6e2bda5d227b16e0dbbf98a11c3aaa"
+      "checksum": "7a0aa4db2d5a75e7278036f0e4d81915"
     },
     "app/__pycache__/guardrails.cpython-312.pyc": {
-      "checksum": "edde685dd917b6ad36208029e3360bc2"
+      "checksum": "44ede1c31b5111e426b0b32b95809fd3"
     },
     "app/__pycache__/logging_setup.cpython-312.pyc": {
-      "checksum": "4f4ceac101e4b4e0e4db7e25886feaac"
+      "checksum": "8d26d2f9d4b20c71de1158fc0637646c"
     },
     "app/__pycache__/loop.cpython-312.pyc": {
-      "checksum": "6942aac518e6b8be9e877febac35aefe"
+      "checksum": "6f6ca6b37d0d3861b56e843375f583da"
     },
     "app/__pycache__/tools.cpython-312.pyc": {
-      "checksum": "755458ff0a052cd364ad805b85df4197"
+      "checksum": "b66f05376b9f4fb2c1587a8da76023bd"
     },
     "app/api.py": {
-      "checksum": "27400eebe25d9a539481a8a4efde4ad1"
+      "checksum": "61dfb8ca618f3bbee7e069ce6614554f"
     },
     "app/context.py": {
       "checksum": "51bf63ab656c064fce54d0d5d24e9565"
@@ -72,13 +83,13 @@
       "checksum": "c0202e7dff339f45832809c5165d767d"
     },
     "deployme.sh": {
-      "checksum": "3a837d853e60f0d9444d90f43edce636"
+      "checksum": "70467d551b7ff87ddd4a53d5430d86c5"
     },
     "logs/.gitkeep": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "logs/agent.log": {
-      "checksum": "fbbdb02e04c7a5ea3674c6a380fad802"
+      "checksum": "e7b0035949d668ea6c22939f2b1ab08f"
     },
     "manifestme.sh": {
       "checksum": "ed00811045ba596d18af0f5512ae1300"
@@ -102,7 +113,7 @@
       "checksum": "32b556439942ba5060077ff0ead455dd"
     },
     "testme.py": {
-      "checksum": "911a3bed39332c8b0348b532a690bc14"
+      "checksum": "7b1480a680e2f042fd620c61005313a8"
     }
   }
 }
