@@ -1,0 +1,21 @@
+name: Brussels Traffic Data Ingestion (Python)
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # every 15 minutes
+  workflow_dispatch:
+
+jobs:
+  ingest_python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install Python dependencies
+        run: pip install requests pandas
+      - name: Run Brussels ingestion script (Python)
+        working-directory: 12_end
+        run: python 01_ingest_traffic.py

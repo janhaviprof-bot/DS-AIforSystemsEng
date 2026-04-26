@@ -1,0 +1,26 @@
+name: Brussels Model Training (Python)
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'   # weekly on Mondays at 7am UTC
+  workflow_dispatch:        # allow manual trigger
+
+jobs:
+  train_python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install pandas xgboost numpy
+      - name: Run training script (Python)
+        working-directory: 12_end
+        run: python 02_train_model.py
+      - name: Upload model artifact (Python)
+        uses: actions/upload-artifact@v4
+        with:
+          name: xgboost-model-python
+          path: 12_end/data/model.json
