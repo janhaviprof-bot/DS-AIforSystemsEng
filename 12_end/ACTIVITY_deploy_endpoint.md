@@ -1,4 +1,4 @@
-# 📌 ACTIVITY
+# 📌 ACTIVITY (OPTIONAL)
 
 ## Deploy Model Endpoint Online
 
