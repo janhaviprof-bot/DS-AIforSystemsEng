@@ -1,0 +1,77 @@
+{
+  "metro_id": 948,
+  "test_rmse": 10.575842602015193,
+  "test_r_squared": 0.34465931470630096,
+  "train_rmse": 7.503589422661622,
+  "train_r_squared": 0.42266006137054113,
+  "residual_standard_error_default": 10.575842602015193,
+  "standard_error_method": "Residual SD on held-out test split by day_of_week/hour_of_day; fallback to test RMSE.",
+  "standard_error_by_hour_day": [
+    {
+      "day_of_week": 1,
+      "hour_of_day": 1,
+      "standard_error": 0.44721359549995787,
+      "n": 5
+    },
+    {
+      "day_of_week": 1,
+      "hour_of_day": 2,
+      "standard_error": 1.7320508075688772,
+      "n": 13
+    },
+    {
+      "day_of_week": 1,
+      "hour_of_day": 3,
+      "standard_error": 10.1447851956888,
+      "n": 4
+    },
+    {
+      "day_of_week": 1,
+      "hour_of_day": 4,
+      "standard_error": 12.311918344975057,
+      "n": 4
+    },
+    {
+      "day_of_week": 1,
+      "hour_of_day": 6,
+      "standard_error": 14.952145888355515,
+      "n": 10
+    },
+    {
+      "day_of_week": 1,
+      "hour_of_day": 7,
+      "standard_error": 20.77257807784099,
+      "n": 9
+    },
+    {
+      "day_of_week": 1,
+      "hour_of_day": 9,
+      "standard_error": 13.632288352081089,
+      "n": 8
+    },
+    {
+      "day_of_week": 4,
+      "hour_of_day": 12,
+      "standard_error": 12.355835328567093,
+      "n": 6
+    },
+    {
+      "day_of_week": 7,
+      "hour_of_day": 2,
+      "standard_error": 6.71161319162442,
+      "n": 18
+    },
+    {
+      "day_of_week": 7,
+      "hour_of_day": 3,
+      "standard_error": 0.8944271909999159,
+      "n": 5
+    },
+    {
+      "day_of_week": 7,
+      "hour_of_day": 4,
+      "standard_error": 2.4083189157584592,
+      "n": 5
+    }
+  ]
+}

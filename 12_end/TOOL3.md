@@ -14,6 +14,7 @@ This tool finalizes work from App V2 and emphasizes production readiness:
 - All features from App V1 and App V2
 - Production-ready refinements and enhancements
 - Quality control and validation of AI prompting
+- An Agentic Loop (you design)
 - Live presentation demonstration
 
 **Note**: This is a **group assignment**. Your team should refine your existing App V2 to make it production-ready. You will present your application in a live product demonstration session. **Attendance is Mandatory.** Distance Learning students may submit a video presenting their application instead.

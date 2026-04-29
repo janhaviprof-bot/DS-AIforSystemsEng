@@ -67,6 +67,18 @@ cat("   Prompt B: Mean = ", round(mean(scores$overall_score[scores$prompt_id == 
 cat("   Prompt C: Mean = ", round(mean(scores$overall_score[scores$prompt_id == "C"]), 2), 
     ", SD = ", round(sd(scores$overall_score[scores$prompt_id == "C"]), 2), "\n\n")
 
+
+scores %>%
+   group_by(prompt_id) %>%
+   summarize(
+      clarity_mu = mean(clarity), 
+      clarity_sd = sd(clarity),
+      clarity_se = clarity_sd / sqrt(n()),
+      clarity_lower = clarity_mu - 1.96 * clarity_se,
+      clarity_upper = clarity_mu + 1.96 * clarity_se,
+      n = n()
+      )
+
 # 2. TESTING ASSUMPTIONS ###################################
 
 ## 2.1 Homogeneity of Variance (Bartlett's Test) #################################
@@ -85,6 +97,7 @@ cat("\n")
 var_equal = bartlett_result$p.value >= 0.05
 cat("📊 Equal Variance Assumption: ", ifelse(var_equal, "✅ Can assume equal variance", "❌ Do NOT assume equal variance"), "\n")
 cat("   (p-value = ", round(bartlett_result$p.value, 4), ")\n\n")
+
 
 # 3. TWO-GROUP COMPARISON: T-TEST ###################################
 

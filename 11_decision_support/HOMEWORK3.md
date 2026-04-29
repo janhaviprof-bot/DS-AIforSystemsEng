@@ -48,7 +48,7 @@ Your deliverable should be a complete validation system that demonstrates:
   - Describe your experimental design: What prompts did you compare? How many scores did you collect?
   - Present your statistical analysis results: Which prompt performed significantly better? Include your test statistic and p-value
   - Discuss design choices or challenges you encountered
-  - Written in your own words (4+ paragraphs)
+  - Written in your own words (~500 words)
 
 - [ ] **🔗 [20 pts] Git Repository Links**: Working, valid links to relevant content in your git repository
   - Link to your validation system script/code

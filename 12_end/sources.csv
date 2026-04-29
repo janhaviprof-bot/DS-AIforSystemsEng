@@ -1,0 +1,4 @@
+﻿source,source_name,source_api
+20,data_gov_sg_lta_annual_traffic,https://data.gov.sg/api/action/datastore_search?resource_id=d_3136f317a1f282a33fe7a2f6a907c047
+21,data_gov_sg_traffic_images,https://api.data.gov.sg/v1/transport/traffic-images
+22,data_gov_sg_taxi_availability,https://api.data.gov.sg/v1/transport/taxi-availability

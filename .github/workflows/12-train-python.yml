@@ -1,0 +1,77 @@
+name: Model Training Job (Python)
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'   # weekly on Mondays at 7am UTC
+  workflow_dispatch:        # allow manual trigger
+
+concurrency:
+  group: dsai-main-writers
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  train_python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CHECKOUT REPOSITORY
+        uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+
+      - name: CHECK FILE SIZE LIMITS
+        run: |
+          set -euo pipefail
+          check_size_mb() {
+            FILE="$1"
+            MAX_MB="$2"
+            if [ -f "$FILE" ]; then
+              SIZE_BYTES=$(wc -c < "$FILE")
+              SIZE_MB=$((SIZE_BYTES / 1024 / 1024))
+              echo "File: $FILE | Size: ${SIZE_MB} MB | Limit: ${MAX_MB} MB"
+              if [ "$SIZE_BYTES" -gt $((MAX_MB * 1024 * 1024)) ]; then
+                echo "ERROR: $FILE exceeds ${MAX_MB} MB. Stop run before training."
+                exit 1
+              fi
+            else
+              echo "File not found yet (skip): $FILE"
+            fi
+          }
+          check_size_mb "12_end/data/modelpy.json" 95
+          check_size_mb "12_end/data/validationpy.json" 95
+
+      - name: SETUP PYTHON
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: CACHE PIP PACKAGES
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-train-${{ hashFiles('.github/workflows/12-train-python.yml', '12_end/02_train_model.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-train-
+            ${{ runner.os }}-pip-
+
+      - name: INSTALL DEPENDENCIES
+        run: pip install pandas xgboost numpy
+
+      - name: RUN TRAINING SCRIPT
+        working-directory: 12_end
+        run: python 02_train_model.py
+
+      - name: COMMIT CHANGES
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add 12_end/data/modelpy.json 12_end/data/validationpy.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: train python model $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
