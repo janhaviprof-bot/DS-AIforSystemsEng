@@ -26,3 +26,6 @@ z/
 10_data_management/agentr/rsconnect/
 10_data_management/agentpy/rsconnect-python/agentpy.json
 10_data_management/agentr/rsconnect/agentr.json
+
+# Local R library (installed by dev machine; mirrors CI deps)
+12_end/r-lib/
