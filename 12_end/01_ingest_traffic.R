@@ -49,9 +49,42 @@ cat("   🔗 ", BASE_URL, "\n", sep = "")
 
 # 2. FETCH DATA ###################################
 
-resp = request(BASE_URL) |>
+# Retry API requests with exponential backoff for transient network/API failures.
+perform_with_retry = function(req, max_attempts = 5) {
+  last_error = NULL
+  for (attempt in seq_len(max_attempts)) {
+    result = tryCatch(
+      req_perform(req),
+      error = function(e) e
+    )
+    if (!inherits(result, "error")) {
+      return(result)
+    }
+
+    last_error = result
+    if (attempt < max_attempts) {
+      sleep_seconds = min(2 ^ attempt, 30)
+      cat(
+        "   ⚠️ transient request failure; retrying in ",
+        sleep_seconds,
+        "s (attempt ",
+        attempt,
+        "/",
+        max_attempts,
+        ")\n",
+        sep = ""
+      )
+      Sys.sleep(sleep_seconds)
+    }
+  }
+  stop(last_error)
+}
+
+req = request(BASE_URL) |>
   req_url_query(request = "live", includeLanes = "false", interval = "1") |>
-  req_perform()
+  req_timeout(seconds = 30)
+
+resp = perform_with_retry(req, max_attempts = 5)
 
 if (resp_status(resp) != 200) {
   stop("Brussels traffic API failed with status ", resp_status(resp))
