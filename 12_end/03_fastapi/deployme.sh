@@ -18,6 +18,9 @@ fi
 : "${CONNECT_SERVER:?Set CONNECT_SERVER in .env (Posit Connect URL)}"
 : "${CONNECT_API_KEY:?Set CONNECT_API_KEY in .env}"
 
+mkdir -p data
+cp -f "../data/modelpy.json" "../data/validationpy.json" data/
+
 pip install -q rsconnect-python
 
 TITLE="${CONNECT_TITLE:-brussels-traffic-fastapi}"
@@ -27,4 +30,5 @@ rsconnect deploy fastapi \
   --server "$CONNECT_SERVER" \
   --api-key "$CONNECT_API_KEY" \
   --entrypoint main:app \
+  --exclude ".env" \
   .

@@ -29,3 +29,6 @@ z/
 
 # Local R library (installed by dev machine; mirrors CI deps)
 12_end/r-lib/
+
+# Staged model JSON for FastAPI Connect bundle (canonical copies live in 12_end/data/)
+12_end/03_fastapi/data/*.json

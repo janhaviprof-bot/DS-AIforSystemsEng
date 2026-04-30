@@ -22,29 +22,35 @@
     "requirements.txt": {
       "checksum": "ccbe21102f534d77137950fd7656b23b"
     },
-    ".env": {
-      "checksum": "3c5c270752bf49dd4436fd702b82ec7f"
-    },
     ".env.example": {
       "checksum": "892add12925a33db35bc0a7a2320cffc"
     },
     ".python-version": {
       "checksum": "7e127c0fccc27fd6e8ce8caf8ba41aa2"
     },
+    "data/.gitkeep": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "data/modelpy.json": {
+      "checksum": "62034d58474a362ad228bdd0c54e11e7"
+    },
+    "data/validationpy.json": {
+      "checksum": "800866caa0dc004a24d2e1b943f81ccb"
+    },
     "deployme.ps1": {
-      "checksum": "62e38b7b6feedf0a24386733267b1cba"
+      "checksum": "9f2a228c25c7d8e7a3abc2c673079484"
     },
     "deployme.sh": {
-      "checksum": "4fd2be7e2f1a28e2ed22c1b7be55f91d"
+      "checksum": "fbcdad6db8562c3de81121f5c131576e"
     },
     "main.py": {
-      "checksum": "bb6c8a3550bf39c14572e7b0d658899f"
+      "checksum": "c4250f71ab62fd003c6327f451948b99"
     },
     "manifestme.ps1": {
-      "checksum": "6ef8f03d42416752946a71739b20c1fd"
+      "checksum": "d7049483822a8b720caea657bbf6bf43"
     },
     "manifestme.sh": {
-      "checksum": "814540f45a2dc84281ecdf1a3c46944f"
+      "checksum": "dc930a462ad92abe9879bfa352abf436"
     },
     "runme.sh": {
       "checksum": "6ef9573bc36f9e03cd3da431832b11ec"

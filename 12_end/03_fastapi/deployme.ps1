@@ -23,10 +23,13 @@ if (-not $env:CONNECT_SERVER -or -not $env:CONNECT_API_KEY) {
   throw "Set CONNECT_SERVER and CONNECT_API_KEY in .env (see .env.example) or in the environment before deploying."
 }
 
+New-Item -ItemType Directory -Force -Path "data" | Out-Null
+Copy-Item -Force "../data/modelpy.json", "../data/validationpy.json" -Destination "data/"
+
 python -m pip install -q rsconnect-python
 $title = if ($env:CONNECT_TITLE) {
   $env:CONNECT_TITLE
 } else {
   "brussels-traffic-fastapi"
 }
-rsconnect deploy fastapi --title $title --server $env:CONNECT_SERVER --api-key $env:CONNECT_API_KEY --entrypoint main:app .
+rsconnect deploy fastapi --title $title --server $env:CONNECT_SERVER --api-key $env:CONNECT_API_KEY --entrypoint main:app --exclude ".env" .

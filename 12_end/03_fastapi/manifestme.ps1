@@ -4,5 +4,9 @@ $ErrorActionPreference = "Stop"
 # Or from this folder: .\manifestme.ps1
 
 Set-Location $PSScriptRoot
+
+New-Item -ItemType Directory -Force -Path "data" | Out-Null
+Copy-Item -Force "../data/modelpy.json", "../data/validationpy.json" -Destination "data/"
+
 python -m pip install -q rsconnect-python
-rsconnect write-manifest fastapi --entrypoint main:app --overwrite .
+rsconnect write-manifest fastapi --entrypoint main:app --overwrite . --exclude ".env"

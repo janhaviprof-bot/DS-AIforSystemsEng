@@ -58,7 +58,7 @@ Files (under [`12_end/03_fastapi/`](03_fastapi/)):
 Steps:
 
 - [ ] Copy [`03_fastapi/.env.example`](03_fastapi/.env.example) to `03_fastapi/.env` and set **`CONNECT_SERVER`** (full `https://...` Posit Connect base URL) and **`CONNECT_API_KEY`**. On Windows PowerShell, a `.env` file is **not** loaded automatically — use **`deployme.ps1`**, which loads it, or set `$env:CONNECT_SERVER` / `$env:CONNECT_API_KEY` yourself before `rsconnect deploy`.
-- [ ] Generate a manifest: from repo root, **`bash 12_end/03_fastapi/manifestme.sh`** (Git Bash or macOS/Linux), **or** `powershell -NoProfile -ExecutionPolicy Bypass -File 12_end/03_fastapi/manifestme.ps1`.
+- [ ] Generate a manifest: from repo root, **`bash 12_end/03_fastapi/manifestme.sh`** (Git Bash or macOS/Linux), **or** `powershell -NoProfile -ExecutionPolicy Bypass -File 12_end/03_fastapi/manifestme.ps1`. These scripts copy `12_end/data/modelpy.json` and `12_end/data/validationpy.json` into `03_fastapi/data/` so Posit Connect bundles the trained model (without them, the app crashes at import and `rsconnect` verification fails).
 - [ ] Deploy: **`bash 12_end/03_fastapi/deployme.sh`** **or** `powershell -NoProfile -ExecutionPolicy Bypass -File 12_end/03_fastapi/deployme.ps1`. If `bash` on Windows routes to a broken WSL install, use Git Bash or the `.ps1` scripts instead.
 - [ ] For local testing, from `12_end/03_fastapi`: `python -m uvicorn main:app --host 127.0.0.1 --port 8000` (same as [`runme.sh`](03_fastapi/runme.sh)).
 - [ ] Smoke-test: from repo root, `python 12_end/03_fastapi/testme.py` (install `requests` and `python-dotenv` if needed). For a deployed URL, set **`API_PUBLIC_URL`** in `.env` to that URL before running `testme.py`.

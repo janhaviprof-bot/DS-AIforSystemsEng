@@ -7,5 +7,8 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 
+mkdir -p data
+cp -f "../data/modelpy.json" "../data/validationpy.json" data/
+
 pip install -q rsconnect-python
-rsconnect write-manifest fastapi --entrypoint main:app --overwrite .
+rsconnect write-manifest fastapi --entrypoint main:app --overwrite . --exclude ".env"

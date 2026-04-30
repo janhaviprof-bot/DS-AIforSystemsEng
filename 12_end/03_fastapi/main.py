@@ -13,7 +13,9 @@ import json
 
 
 def resolve_model_path() -> Path:
+    here = Path(__file__).resolve().parent
     candidates = [
+        here / "data" / "modelpy.json",
         Path("data/modelpy.json"),
         Path("../data/modelpy.json"),
         Path("12_end/data/modelpy.json"),
@@ -25,7 +27,9 @@ def resolve_model_path() -> Path:
 
 
 def resolve_validation_path() -> Path:
+    here = Path(__file__).resolve().parent
     candidates = [
+        here / "data" / "validationpy.json",
         Path("data/validationpy.json"),
         Path("../data/validationpy.json"),
         Path("12_end/data/validationpy.json"),
