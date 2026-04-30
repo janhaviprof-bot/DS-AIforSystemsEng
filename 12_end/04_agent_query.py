@@ -94,7 +94,7 @@ messages = [
     },
     {
         "role": "user",
-        "content": "Predict Brussels vehicle count for Monday for every hour (0 through 23).",
+        "content": "Predict Brussels vehicle count for Monday at 8 AM..",
     }
 ]
 tools = [tool_predict_vehicle_count]
