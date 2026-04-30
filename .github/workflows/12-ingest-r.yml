@@ -61,6 +61,7 @@ jobs:
         with:
           packages: |
             any::httr2
+            any::jsonlite
             any::dplyr
             any::tibble
             any::purrr
