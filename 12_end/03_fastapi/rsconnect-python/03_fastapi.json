@@ -1,0 +1,12 @@
+{
+    "https://connect.systems-apps.com": {
+        "server_url": "https://connect.systems-apps.com",
+        "filename": "C:\\Work\\Study\\SYSEN-5381\\Repository\\dsai\\12_end\\03_fastapi",
+        "app_url": "https://connect.systems-apps.com/content/afcb9861-64ea-425f-984c-a6ceb1325165/",
+        "app_id": "249",
+        "app_guid": "afcb9861-64ea-425f-984c-a6ceb1325165",
+        "title": "brussels-traffic-fastapi",
+        "app_mode": "python-fastapi",
+        "app_store_version": 1
+    }
+}
