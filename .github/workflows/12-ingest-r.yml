@@ -69,6 +69,10 @@ jobs:
             any::DBI
             any::RSQLite
 
+      - name: VERIFY RUNTIME PACKAGES
+        run: |
+          Rscript -e "if (!requireNamespace('jsonlite', quietly = TRUE)) install.packages('jsonlite', repos = Sys.getenv('RSPM')); if (!requireNamespace('httr2', quietly = TRUE)) install.packages('httr2', repos = Sys.getenv('RSPM')); cat('jsonlite:', as.character(packageVersion('jsonlite')), '\n'); cat('httr2:', as.character(packageVersion('httr2')), '\n')"
+
       - name: RUN INGESTION JOB
         working-directory: 12_end
         run: Rscript 01_ingest_traffic.R
