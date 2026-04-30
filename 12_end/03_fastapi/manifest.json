@@ -13,6 +13,11 @@
       "package_file": "requirements.txt"
     }
   },
+  "environment": {
+    "python": {
+      "requires": "~=3.12.0"
+    }
+  },
   "files": {
     "requirements.txt": {
       "checksum": "ccbe21102f534d77137950fd7656b23b"
@@ -23,17 +28,26 @@
     ".env.example": {
       "checksum": "892add12925a33db35bc0a7a2320cffc"
     },
+    ".python-version": {
+      "checksum": "7e127c0fccc27fd6e8ce8caf8ba41aa2"
+    },
+    "deployme.ps1": {
+      "checksum": "62e38b7b6feedf0a24386733267b1cba"
+    },
     "deployme.sh": {
-      "checksum": "b57ce1b526c21af73416e8dd5e717f5d"
+      "checksum": "4fd2be7e2f1a28e2ed22c1b7be55f91d"
     },
     "main.py": {
       "checksum": "bb6c8a3550bf39c14572e7b0d658899f"
     },
+    "manifestme.ps1": {
+      "checksum": "6ef8f03d42416752946a71739b20c1fd"
+    },
     "manifestme.sh": {
-      "checksum": "a5fa21fe6cae9c6f7091eb68ae101b02"
+      "checksum": "814540f45a2dc84281ecdf1a3c46944f"
     },
     "runme.sh": {
-      "checksum": "c01cfcc741efb938b667bbaea8d66060"
+      "checksum": "6ef9573bc36f9e03cd3da431832b11ec"
     },
     "testme.py": {
       "checksum": "987ae1da3f71d43b344967ed95b7986b"
