@@ -38,8 +38,8 @@ Run-Step -Command "Rscript" -Arguments @("12_end/03_plumber/deployme.R")
 # Run the fastapi api
 Run-Step -Command "bash" -Arguments @("12_end/03_fastapi/runme.sh")
 Run-Step -Command "python" -Arguments @("12_end/03_fastapi/testme.py")
-Run-Step -Command "bash" -Arguments @("12_end/03_fastapi/manifestme.sh")
-Run-Step -Command "bash" -Arguments @("12_end/03_fastapi/deployme.sh")
+Run-Step -Command "powershell" -Arguments @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "12_end/03_fastapi/manifestme.ps1")
+Run-Step -Command "powershell" -Arguments @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "12_end/03_fastapi/deployme.ps1")
 
 # Run the agent query
 Run-Step -Command "Rscript" -Arguments @("12_end/04_agent_query.R")

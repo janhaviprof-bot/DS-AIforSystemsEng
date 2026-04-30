@@ -1,7 +1,7 @@
 #!/bin/bash
 # manifestme.sh
 # Write manifest.json for Posit Connect deployment of this FastAPI app.
-# Run from anywhere: bash 12_end/fastapi/manifestme.sh
+# Run from repo root: bash 12_end/03_fastapi/manifestme.sh
 
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"

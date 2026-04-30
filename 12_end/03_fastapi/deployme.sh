@@ -2,6 +2,7 @@
 # deployme.sh
 # Deploy this FastAPI folder to Posit Connect via rsconnect-python.
 # Requires .env in this folder with CONNECT_SERVER and CONNECT_API_KEY.
+# On Windows without Bash, use deployme.ps1 in this same folder.
 
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"

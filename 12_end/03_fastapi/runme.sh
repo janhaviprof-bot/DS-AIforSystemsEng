@@ -1,7 +1,7 @@
 #!/bin/bash
 # runme.sh
 # Run FastAPI app locally with uvicorn.
-# Run from anywhere: bash 12_end/fastapi/runme.sh
+# Run from repo root: bash 12_end/03_fastapi/runme.sh
 
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
