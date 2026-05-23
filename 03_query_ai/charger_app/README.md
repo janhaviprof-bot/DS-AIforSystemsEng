@@ -96,6 +96,19 @@ The app reads environment variables from a [`.env`](.env) file in this directory
 
 ## **<u>Using the app</u>**
 
+### Demo on launch
+
+When you open the app, it immediately shows a **demo preview** for a **Tesla Model 3** sample vehicle: hero recommendation, 48h carbon intensity chart, and three illustrative slot cards. A yellow **Demo preview** banner above the results explains that this data is for demonstration only. Calendar actions are hidden until you load live recommendations.
+
+To get **real-time** results (live carbon intensity API + OpenAI slot suggestions):
+
+1. Enter your own vehicle and/or adjust **Charging slot preferences**, then click **Confirm** (left or right column as needed), **or**
+2. Click **Get recommendations** in **All recommended slots**.
+
+That replaces the demo with live data and enables **Add to calendar**.
+
+### Normal flow
+
 1. **Left column:** Set **Charging slot preferences** (duration in hours) and click **Confirm**.
 2. **Right column:** In **Car make and model**, describe your vehicle and click **Look up**. Review/correct the suggested make and model, then click **Confirm**.
 3. **EV data and charging time** appears after confirmation; **Carbon intensity (next 48h)** and the **Hero** recommendation update when slots are available.

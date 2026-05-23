@@ -9,6 +9,7 @@ from shiny import reactive, render, Session, ui
 
 from urllib.parse import quote
 
+from demo_data import get_demo_ev_result, get_demo_intensity_data, get_demo_slots_result
 from utils import (
     parse_make_model_with_ollama,
     fetch_ev_from_api,
@@ -40,6 +41,19 @@ def server(input, output, session: Session):
     intensity_data = reactive.Value(None)
     # True while slots recommendation is being fetched
     slots_loading = reactive.Value(False)
+    # Demo data shown on launch until user runs a real slots / vehicle flow
+    demo_mode = reactive.Value(True)
+
+    @reactive.Effect
+    def _load_demo_on_start():
+        """Show Tesla Model 3 demo results as soon as the app opens."""
+        if not demo_mode():
+            return
+        if slots_result() is not None:
+            return
+        ev_result.set(get_demo_ev_result())
+        intensity_data.set(get_demo_intensity_data())
+        slots_result.set(get_demo_slots_result())
 
     @reactive.Effect
     @reactive.event(input.look_up)
@@ -51,6 +65,7 @@ def server(input, output, session: Session):
             inferred_result.set({"make": result["make"], "model": result["model"]})
         else:
             inferred_result.set({"error_message": result["error_message"]})
+        demo_mode.set(False)
         # Clear previous EV result and slots when starting a new lookup
         ev_result.set(None)
         slots_result.set(None)
@@ -117,6 +132,7 @@ def server(input, output, session: Session):
         except Exception:
             model = ""
         api_result = fetch_ev_from_api(make, model)
+        demo_mode.set(False)
         if api_result.get("success") and api_result.get("data"):
             ev_result.set(api_result)
             slots_result.set(None)
@@ -182,6 +198,15 @@ def server(input, output, session: Session):
         show_nominal = battery_nominal and "premium" not in str(battery_nominal).lower()
         battery_display = battery_usable if battery_usable else (battery_nominal if show_nominal else "")
         parts = []
+        if res.get("source") == "demo":
+            parts.append(
+                ui.div(
+                    ui.strong("Demo vehicle: "),
+                    "Tesla Model 3 sample specs. Use Look up with your own car for real data.",
+                    class_="alert alert-info mb-3",
+                    role="status",
+                )
+            )
         if res.get("source") == "llm":
             parts.append(
                 ui.div(
@@ -254,6 +279,7 @@ def server(input, output, session: Session):
 
     def _run_slots_flow():
         """Run slots flow: effective_hours from left (slot length) and/or right (vehicle). Fetch intensity, call LLM, set slots_result."""
+        demo_mode.set(False)
         slots_loading.set(True)
         try:
             try:
@@ -306,6 +332,8 @@ def server(input, output, session: Session):
 
     def _show_calendar_modal_for_slot(slot_index: int):
         """Build and show 'Add to calendar' modal for the slot at the given index."""
+        if demo_mode():
+            return
         slots_res = slots_result()
         if not slots_res or not slots_res.get("success"):
             return
@@ -365,6 +393,24 @@ def server(input, output, session: Session):
             _show_calendar_modal_for_slot(idx)
 
     @render.ui
+    def demo_warning_ui():
+        """Banner above results while demo data is shown."""
+        if not demo_mode() or slots_loading():
+            return None
+        slots_res = slots_result()
+        if slots_res is None or not slots_res.get("success"):
+            return None
+        return ui.div(
+            ui.strong("Demo preview — "),
+            "Results shown are for demonstration only (Tesla Model 3 sample). "
+            "Enter your vehicle and charging preferences, then confirm or click ",
+            ui.strong("Get recommendations"),
+            " for real-time results.",
+            class_="alert alert-warning ev-demo-warning mb-3",
+            role="alert",
+        )
+
+    @render.ui
     def hero_recommendation_ui():
         """Single prominent card: #1 slot only — large time, intensity badge, reason, CTA. Shown when slots loaded."""
         if slots_loading():
@@ -393,7 +439,17 @@ def server(input, output, session: Session):
                 style=f"color: var(--ev-text);",
             ),
             ui.p(reason or "Lowest carbon intensity in the next 48 hours.", class_="hero-recommendation-reason", style=f"color: var(--ev-muted);"),
-            ui.input_action_button("charge_now_btn", "Charge in this window", class_="btn btn-primary"),
+            *(
+                []
+                if demo_mode()
+                else [
+                    ui.input_action_button(
+                        "charge_now_btn",
+                        "Charge in this window",
+                        class_="btn btn-primary",
+                    )
+                ]
+            ),
             class_="hero-recommendation",
         )
 
@@ -530,7 +586,7 @@ def server(input, output, session: Session):
                 ui.p(f"{start_uk} – {end_uk}", class_="mb-1 small"),
                 ui.span(reason, style="opacity: 0.9;", class_="small"),
             ]
-            if i < MAX_CALENDAR_SLOTS:
+            if i < MAX_CALENDAR_SLOTS and not demo_mode():
                 card_body_children.append(
                     ui.div(
                         ui.input_action_button(
@@ -596,6 +652,11 @@ def server(input, output, session: Session):
                 ui.div(
                     {"class": "card-body"},
                     ui.h5("All recommended slots", class_="card-title"),
+                    ui.input_action_button(
+                        "get_slots_btn",
+                        "Get recommendations",
+                        class_="btn btn-primary mb-3",
+                    ),
                     ui.output_ui("slots_ui"),
                 ),
             )

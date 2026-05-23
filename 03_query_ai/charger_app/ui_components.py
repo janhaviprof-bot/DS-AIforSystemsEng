@@ -218,6 +218,23 @@ body {
   }
 }
 
+/* Demo warning above results */
+.ev-demo-warning {
+  border-radius: 12px;
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  background: rgba(234, 179, 8, 0.12);
+  color: var(--ev-text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ev-demo-warning {
+    border-color: rgba(234, 179, 8, 0.35);
+    background: rgba(234, 179, 8, 0.1);
+  }
+}
+
 /* Insight: muted block below graph */
 .insight-section {
   font-size: 0.9375rem;
@@ -674,6 +691,7 @@ def app_ui(request):
                             ui.input_action_button("confirm_slot_hours_btn", "Confirm", class_="btn btn-primary mt-2"),
                         ),
                     ),
+                    ui.output_ui("demo_warning_ui"),
                     ui.output_ui("hero_recommendation_ui"),
                     ui.output_ui("intensity_card_ui"),
                     ui.output_ui("insight_ui"),
@@ -695,7 +713,7 @@ def app_ui(request):
                                 "car_input",
                                 "Describe the vehicle",
                                 placeholder="e.g. Tesla Model 3 or Nissan Leaf",
-                                value="",
+                                value="Tesla Model 3",
                             ),
                             ui.tags.p("We'll extract make and model.", class_="help-text"),
                             ui.input_action_button("look_up", "Look up", class_="btn btn-primary mt-2"),
