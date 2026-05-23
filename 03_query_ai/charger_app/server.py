@@ -2,8 +2,8 @@
 # Server logic for EV Charger Shiny app.
 # Tim Fraser
 
-# Two-phase flow: (1) Look up -> Ollama extracts make/model -> show confirmation UI.
-# (2) Confirm -> fetch EV data from API -> display make, model, battery, charge, charging time.
+# Vehicle flow: Look up -> Ollama extracts make/model -> auto-fetch EV data and slots.
+# User sees an informational card with what was understood (no second confirm step).
 
 from shiny import reactive, render, Session, ui
 
@@ -27,8 +27,7 @@ from utils import (
 
 def server(input, output, session: Session):
     """
-    Server function: on Look up, call Ollama and show confirm UI;
-    on Confirm, call API and show EV data and charging time.
+    Server function: on Look up, infer make/model, fetch EV data, and run slots flow.
     """
 
     # Inferred make/model from Ollama (None or dict with make/model or error_message)
@@ -41,6 +40,8 @@ def server(input, output, session: Session):
     intensity_data = reactive.Value(None)
     # True while slots recommendation is being fetched
     slots_loading = reactive.Value(False)
+    # True while EV API/LLM runs after Look up (before slots flow)
+    vehicle_lookup_loading = reactive.Value(False)
     # Demo data shown on launch until user runs a real slots / vehicle flow
     demo_mode = reactive.Value(True)
 
@@ -55,25 +56,9 @@ def server(input, output, session: Session):
         intensity_data.set(get_demo_intensity_data())
         slots_result.set(get_demo_slots_result())
 
-    @reactive.Effect
-    @reactive.event(input.look_up)
-    def _on_look_up():
-        """When the user clicks Look up, call Ollama and store inferred make/model."""
-        text = input.car_input()
-        result = parse_make_model_with_ollama(text or "")
-        if result["success"]:
-            inferred_result.set({"make": result["make"], "model": result["model"]})
-        else:
-            inferred_result.set({"error_message": result["error_message"]})
-        demo_mode.set(False)
-        # Clear previous EV result and slots when starting a new lookup
-        ev_result.set(None)
-        slots_result.set(None)
-        intensity_data.set(None)
-
     @render.ui
     def confirm_ui():
-        """Show confirmation message and editable make/model fields with Confirm button."""
+        """Informational card: what Look up inferred (read-only)."""
         inf = inferred_result()
         if inf is None:
             return ui.p("Enter a car above and click Look up.", class_="text-muted")
@@ -86,79 +71,35 @@ def server(input, output, session: Session):
             )
         make = inf.get("make") or ""
         model = inf.get("model") or ""
-        return ui.TagList(
+        parts = [
             ui.p(
                 ui.strong("We understood: "),
-                f" {make} {model}".strip() or " (edit below)",
+                f"{make} {model}".strip() or "your vehicle",
+                class_="mb-0",
             ),
-            ui.div(
-                {"class": "row g-2 mb-2"},
-                ui.div(
-                    {"class": "col-md-6"},
-                    ui.input_text("make_edit", "Make", value=make),
-                ),
-                ui.div(
-                    {"class": "col-md-6"},
-                    ui.input_text("model_edit", "Model", value=model),
-                ),
-            ),
-            ui.input_action_button("confirm_btn", "Confirm", class_="btn btn-primary"),
-        )
+        ]
+        if vehicle_lookup_loading():
+            parts.append(
+                ui.p(
+                    "Loading EV specs and updating recommendations…",
+                    class_="text-muted small mt-2 mb-0",
+                )
+            )
+        return ui.TagList(*parts)
 
     @render.ui
     def confirm_card_ui():
-        """Show Confirm vehicle card only when user has clicked Look up (inferred_result set)."""
+        """Show understood-vehicle card after Look up."""
         if inferred_result() is None:
             return None
         return ui.div(
             {"class": "card card-confirm"},
             ui.div(
                 {"class": "card-body"},
-                ui.h5("Confirm vehicle", class_="card-title"),
+                ui.h5("We understood your vehicle", class_="card-title"),
                 ui.output_ui("confirm_ui"),
             ),
         )
-
-    @reactive.Effect
-    @reactive.event(input.confirm_btn)
-    def _on_confirm():
-        """When the user clicks Confirm, fetch EV data from API; if none, fall back to LLM."""
-        try:
-            make = input.make_edit()
-        except Exception:
-            make = ""
-        try:
-            model = input.model_edit()
-        except Exception:
-            model = ""
-        api_result = fetch_ev_from_api(make, model)
-        demo_mode.set(False)
-        if api_result.get("success") and api_result.get("data"):
-            ev_result.set(api_result)
-            slots_result.set(None)
-            _run_slots_flow()
-            return
-        # API returned no data or error: try LLM fallback (only when API said "no vehicle found" or empty)
-        llm_result = fetch_ev_from_llama(make, model)
-        if llm_result.get("success") and llm_result.get("data"):
-            ev_result.set(llm_result)
-            slots_result.set(None)
-            _run_slots_flow()
-            return
-        # Both failed: show API error or combined message
-        if api_result.get("error_message") and llm_result.get("error_message"):
-            api_result["error_message"] = (
-                "No data from API and could not infer specs. "
-                + api_result["error_message"]
-                + " Try a different make/model."
-            )
-        elif llm_result.get("error_message"):
-            api_result["error_message"] = (
-                api_result.get("error_message") or ""
-                + " Could not infer specs from LLM either. Try a different make/model."
-            ).strip() or llm_result["error_message"]
-        ev_result.set(api_result)
-        slots_result.set(None)
 
     @render.ui
     def result_error():
@@ -182,7 +123,7 @@ def server(input, output, session: Session):
         """Display EV data and charging time as premium card; show disclaimer when source is LLM fallback."""
         res = ev_result()
         if res is None:
-            return ui.p("Confirm the vehicle above to fetch EV data.", class_="text-muted")
+            return ui.p("Click Look up above to fetch EV data.", class_="text-muted")
         if not res.get("success") or not res.get("data"):
             return None
         vehicles = res["data"]
@@ -316,6 +257,64 @@ def server(input, output, session: Session):
         finally:
             slots_loading.set(False)
 
+    def _fetch_ev_for_vehicle(make: str, model: str):
+        """Fetch EV specs from API (LLM fallback) and run live slots flow."""
+        vehicle_lookup_loading.set(True)
+        try:
+            demo_mode.set(False)
+            api_result = fetch_ev_from_api(make, model)
+            if api_result.get("success") and api_result.get("data"):
+                ev_result.set(api_result)
+                slots_result.set(None)
+                intensity_data.set(None)
+                _run_slots_flow()
+                return
+            llm_result = fetch_ev_from_llama(make, model)
+            if llm_result.get("success") and llm_result.get("data"):
+                ev_result.set(llm_result)
+                slots_result.set(None)
+                intensity_data.set(None)
+                _run_slots_flow()
+                return
+            if api_result.get("error_message") and llm_result.get("error_message"):
+                api_result["error_message"] = (
+                    "No data from API and could not infer specs. "
+                    + api_result["error_message"]
+                    + " Try a different description."
+                )
+            elif llm_result.get("error_message"):
+                api_result["error_message"] = (
+                    (api_result.get("error_message") or "")
+                    + " Could not infer specs from LLM either. Try a different description."
+                ).strip() or llm_result["error_message"]
+            ev_result.set(api_result)
+            slots_result.set(None)
+        finally:
+            vehicle_lookup_loading.set(False)
+
+    @reactive.Effect
+    @reactive.event(input.look_up)
+    def _on_look_up():
+        """Look up: infer make/model, then auto-fetch EV data and recommendations."""
+        text = input.car_input()
+        demo_mode.set(False)
+        ev_result.set(None)
+        slots_result.set(None)
+        intensity_data.set(None)
+        result = parse_make_model_with_ollama(text or "")
+        if not result["success"]:
+            inferred_result.set({"error_message": result["error_message"]})
+            return
+        make = (result.get("make") or "").strip()
+        model = (result.get("model") or "").strip()
+        if not make or not model:
+            inferred_result.set({
+                "error_message": "Could not determine make and model. Try a clearer description.",
+            })
+            return
+        inferred_result.set({"make": make, "model": model})
+        _fetch_ev_for_vehicle(make, model)
+
     @reactive.Effect
     @reactive.event(input.confirm_slot_hours_btn)
     def _on_confirm_slot_hours():
@@ -403,7 +402,7 @@ def server(input, output, session: Session):
         return ui.div(
             ui.strong("Demo preview — "),
             "Results shown are for demonstration only (Tesla Model 3 sample). "
-            "Enter your vehicle and charging preferences, then confirm or click ",
+            "Enter your vehicle and click Look up, adjust charging preferences, or click ",
             ui.strong("Get recommendations"),
             " for real-time results.",
             class_="alert alert-warning ev-demo-warning mb-3",

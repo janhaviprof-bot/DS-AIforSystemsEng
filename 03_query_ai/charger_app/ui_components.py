@@ -3,8 +3,7 @@
 # Tim Fraser
 
 # Defines the app UI: header, car make/model text input, Look up button,
-# confirmation area (output_ui), and result area (output_ui). Server
-# fills confirmation and result via two-phase flow.
+# understood-vehicle card (output_ui), and result area (output_ui).
 
 from shiny import ui
 

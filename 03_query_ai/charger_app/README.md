@@ -29,8 +29,8 @@ A **Shiny (Python)** web app that suggests the best EV charging times using UK c
 
 ## **<u>What it does</u>**
 
-- **Vehicle lookup:** Describe your EV in plain text (e.g. *“Tesla Model 3 Long Range”*). The app uses an AI service to infer make and model, then you confirm or edit before fetching specs.
-- **EV data:** After confirmation, the app fetches battery capacity, charge power, and estimated charging time from an external API (with an AI fallback when the API has no match).
+- **Vehicle lookup:** Describe your EV in plain text (e.g. *“Tesla Model 3 Long Range”*). The app uses an AI service to infer make and model, shows what it understood, and automatically fetches specs and updates recommendations.
+- **EV data:** After Look up, the app fetches battery capacity, charge power, and estimated charging time from an external API (with an AI fallback when the API has no match).
 - **Best charging slots:** Set your preferred charging duration and click **Get recommendations**. The app uses UK carbon intensity (next 48 hours) and an AI to suggest low-carbon time windows.
 - **Calendar:** Add a recommended slot to your calendar (Google Calendar or download `.ics`) so you can charge in the suggested window.
 
@@ -102,7 +102,7 @@ When you open the app, it immediately shows a **demo preview** for a **Tesla Mod
 
 To get **real-time** results (live carbon intensity API + OpenAI slot suggestions):
 
-1. Enter your own vehicle and/or adjust **Charging slot preferences**, then click **Confirm** (left or right column as needed), **or**
+1. Click **Look up** with your vehicle and/or adjust **Charging slot preferences** and click **Confirm** (left column), **or**
 2. Click **Get recommendations** in **All recommended slots**.
 
 That replaces the demo with live data and enables **Add to calendar**.
@@ -110,8 +110,8 @@ That replaces the demo with live data and enables **Add to calendar**.
 ### Normal flow
 
 1. **Left column:** Set **Charging slot preferences** (duration in hours) and click **Confirm**.
-2. **Right column:** In **Car make and model**, describe your vehicle and click **Look up**. Review/correct the suggested make and model, then click **Confirm**.
-3. **EV data and charging time** appears after confirmation; **Carbon intensity (next 48h)** and the **Hero** recommendation update when slots are available.
+2. **Right column:** In **Car make and model**, describe your vehicle and click **Look up**. The app shows what it understood and loads EV specs automatically.
+3. **EV data and charging time** appears while recommendations update; **Carbon intensity (next 48h)** and the **Hero** recommendation refresh when slots are ready.
 4. Click **Get recommendations** in **All recommended slots** to refresh suggested windows. Use **Add to calendar** on a slot to open Google Calendar or download an `.ics` file.
 
 *The hero card highlights the single best slot; the list shows all recommended slots with intensity level (low/medium/high).*
